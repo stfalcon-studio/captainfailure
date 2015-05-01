@@ -18,15 +18,14 @@
         <li><a href="#contact">Notifications</a></li>
         <li><a href="#contact">Users</a></li>
       </ul>
-      <form class="navbar-form navbar-right">
-        <div class="form-group">
-          <input type="text" placeholder="Login" class="form-control">
-        </div>
-        <div class="form-group">
-          <input type="password" placeholder="Password" class="form-control">
-        </div>
-        <button type="submit" class="btn btn-success">Sign in</button>
-      </form>
+      <% if user_signed_in? %>
+        <ul class="nav navbar-nav navbar-right">
+          <li><%= link_to current_user.email, edit_user_registration_path, :class => 'navbar-link' %></li>
+          <form class="navbar-form navbar-right">
+            <li><%= link_to "Logout", destroy_user_session_path, method: :delete, :class => 'btn btn-warning' %></li>
+          </form>
+        </ul>
+      <% end %>
     </div><!--/.navbar-collapse -->
   </div>
 </nav>
