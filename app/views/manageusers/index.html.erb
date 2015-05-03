@@ -1,0 +1,20 @@
+<div class="container navless-container">
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Created at</th>
+    </tr>
+    </thead>
+    <tbody>
+  <% @users.each do |user| %>
+    <tr>
+      <th><%= user.name %></th>
+      <th><%= user.email %></th></th>
+      <th><%= user.created_at %></th></th>
+    </tr>
+  <% end %>
+  </tbody>
+  </table>
+</div>
