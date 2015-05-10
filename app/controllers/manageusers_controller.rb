@@ -14,7 +14,6 @@ class ManageusersController < ApplicationController
 
   def new
     @user = User.new
-    p @user
   end
 
   #post /users/manage
@@ -38,12 +37,10 @@ class ManageusersController < ApplicationController
     else
       update_params = :name, :email, :password, :password_confirmation
     end
-    p params[:user]
     @user.update_attributes(params.require(:user).permit(update_params))
     if @user.errors.empty?
       redirect_to '/users/manage'
     else
-      p @user.errors
       render 'edit'
     end
   end
