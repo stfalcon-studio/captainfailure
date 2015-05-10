@@ -6,7 +6,10 @@ Rails.application.routes.draw do
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
   root 'dashboard#index'
-  get 'users/manage' => 'manageusers#index'
+  # get 'users/manage'     => 'manageusers#index'
+  # get 'users/manage/:id' => 'manageusers#edit', :as => :user
+  # patch 'users/manage/:id' => 'manageusers#update'
+  resources :manageusers, path: '/users/manage', as: :user
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
