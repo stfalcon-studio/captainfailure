@@ -15,7 +15,9 @@
         <li><a href="#about">Servers</a></li>
         <li><a href="#contact">Satellites</a></li>
         <li><a href="#contact">Notifications</a></li>
+        <% if current_user.is_admin %>
         <li <%= 'class=active' if @active == 'users' %>><a href="/users/manage">Users</a></li>
+        <% end %>
       </ul>
       <% if user_signed_in? %>
         <ul class="nav navbar-nav navbar-right">

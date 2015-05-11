@@ -1,5 +1,6 @@
 class ManageusersController < ApplicationController
 
+  before_action :check_permission
   before_action :find_user, only: [:show, :edit, :update, :destroy]
 
   #get /users/manage
@@ -18,7 +19,7 @@ class ManageusersController < ApplicationController
 
   #post /users/manage
   def create
-    @user = User.create(params.require(:user).permit(:name, :email, :password, :password_confirmation))
+    @user = User.create(params.require(:user).permit(:name, :email, :password, :password_confirmation, :is_admin))
     if @user.errors.empty?
       redirect_to '/users/manage'
     else
@@ -35,9 +36,9 @@ class ManageusersController < ApplicationController
   #put /users/manage/:id
   def update
     if params[:user][:password] == '' and params[:user][:password_confirmation] == ''
-      update_params = :name, :email
+      update_params = :name, :email, :is_admin
     else
-      update_params = :name, :email, :password, :password_confirmation
+      update_params = :name, :email, :password, :password_confirmation, :is_admin
     end
     @user.update_attributes(params.require(:user).permit(update_params))
     if @user.errors.empty?
@@ -59,5 +60,11 @@ class ManageusersController < ApplicationController
 
   def find_user
     @user = User.where('id = ?', params[:id]).first
+  end
+
+  def check_permission
+    unless current_user.is_admin
+      render 'permission_error', status: 403
+    end
   end
 end

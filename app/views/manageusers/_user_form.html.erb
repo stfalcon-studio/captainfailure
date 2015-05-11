@@ -7,4 +7,7 @@
   <%= f.password_field :password, :autocomplete => 'off', class: 'form-control' %>
   <%= f.label :password_confirmation %>
   <%= f.password_field :password_confirmation, class: 'form-control' %>
+  <br>
+  <%= f.check_box :is_admin %>
+  <%= f.label :is_admin, 'Admin (can edit users)' %>
 </div>
