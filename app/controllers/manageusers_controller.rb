@@ -22,7 +22,9 @@ class ManageusersController < ApplicationController
     if @user.errors.empty?
       redirect_to '/users/manage'
     else
-      render 'edit'
+      @save_errors = ''
+      @user.errors.messages.each_key { |key| @save_errors << "#{key} #{@user.errors.messages[key][0]}" }
+      render 'new'
     end
   end
 
@@ -41,6 +43,8 @@ class ManageusersController < ApplicationController
     if @user.errors.empty?
       redirect_to '/users/manage'
     else
+      @save_errors = ''
+      @user.errors.messages.each_key { |key| @save_errors << "#{key} #{@user.errors.messages[key][0]}" }
       render 'edit'
     end
   end

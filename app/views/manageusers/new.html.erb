@@ -1,6 +1,12 @@
 <div class="container navless-container">
-  <%= form_for @user, url: '/users/manage'  do |f| %>
-      <%= render partial: 'user_form', locals: { f: f} %>
-      <p><%= f.submit 'Create' %></p>
-  <% end %>
+  <h3>Add new user</h3>
+  <%= render partial: 'errors' %>
+  <div class="col-md-6">
+    <div class="authform">
+      <%= form_for @user, url: '/users/manage'  do |f| %>
+          <%= render partial: 'user_form', locals: { f: f} %>
+          <p><%= f.submit 'Create' %></p>
+      <% end %>
+    </div>
+  </div>
 </div>

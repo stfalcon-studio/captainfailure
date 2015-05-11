@@ -1,6 +1,12 @@
 <div class="container navless-container">
-    <%= form_for @user  do |f| %>
-      <%= render partial: 'user_form', locals: { f: f} %>
-      <p><%= f.submit 'Update' %></p>
-    <% end %>
+  <h3>Edit user profile</h3>
+  <%= render partial: 'errors' %>
+  <div class="col-md-6">
+    <div class="authform">
+      <%= form_for @user  do |f| %>
+          <%= render partial: 'user_form', locals: { f: f} %>
+          <p><%= f.submit 'Update' %></p>
+      <% end %>
+    </div>
+  </div>
 </div>
