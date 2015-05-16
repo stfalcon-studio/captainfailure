@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   # get 'users/manage/:id' => 'manageusers#edit', :as => :user
   # patch 'users/manage/:id' => 'manageusers#update'
   resources :manageusers, path: '/users/manage', as: :user
+  resources :servers
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

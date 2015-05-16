@@ -12,7 +12,7 @@
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        <li><a href="#about">Servers</a></li>
+        <li <%= 'class=active' if @active == 'servers' %>><%= link_to 'Servers', controller: :servers, action: :index %></li>
         <li><a href="#contact">Satellites</a></li>
         <li><a href="#contact">Notifications</a></li>
         <% if current_user.is_admin %>

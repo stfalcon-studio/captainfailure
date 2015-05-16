@@ -2,10 +2,10 @@ class ManageusersController < ApplicationController
 
   before_action :check_permission
   before_action :find_user, only: [:show, :edit, :update, :destroy]
+  before_action :set_active
 
   #get /users/manage
   def index
-    @active = 'users'
     @users = User.all
     render 'manageusers/index'
   end
@@ -66,5 +66,9 @@ class ManageusersController < ApplicationController
     unless current_user.is_admin
       render 'permission_error', status: 403
     end
+  end
+
+  def set_active
+    @active = 'users'
   end
 end
