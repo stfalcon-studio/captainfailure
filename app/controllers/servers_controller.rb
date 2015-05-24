@@ -1,10 +1,14 @@
 class ServersController < ApplicationController
 
   before_action :set_active
-  before_action :find_server, only: [:edit, :update, :destroy]
+  before_action :find_server, only: [:show, :edit, :update, :destroy]
 
   def index
     @servers = Server.all
+  end
+
+  def show
+
   end
 
   def new

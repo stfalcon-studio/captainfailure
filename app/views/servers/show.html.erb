@@ -1,0 +1,95 @@
+<div class="container navless-container">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h3 class="panel-title">Server: <%= @server.dns_name %></h3>
+    </div>
+    <div class="panel-body">
+      <p>IP: <%= @server.ip_address %></p>
+      <p>Comment: <%= @server.comment %></p>
+    </div>
+  </div>
+  <hr>
+  <h3>Satellites</h3>
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td>
+        aws-ierland
+      </td>
+      <td>my personal instance in AWS(Ierland)</td>
+      <td>
+        <a data-confirm="Are you sure?" rel="nofollow" data-method="delete" href="/satellites/2"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        de.example.com
+      </td>
+      <td>some server in Germany</td>
+      <td>
+        <a data-confirm="Are you sure?" rel="nofollow" data-method="delete" href="/satellites/3"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        ua.example.com
+      </td>
+      <td>some server in Ukraine</td>
+      <td>
+        <a data-confirm="Are you sure?" rel="nofollow" data-method="delete" href="/satellites/7"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <button type="button" class="btn btn-success">Add</button>
+  <button type="button" class="btn btn-primary">Add all</button>
+  <hr>
+  <h3>Notifications</h3>
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>Type</th>
+      <th>Value</th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td>
+        email
+      </td>
+      <td>jeka@example.com</td>
+      <td>
+        <a data-confirm="Are you sure?" rel="nofollow" data-method="delete" href="/satellites/2"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        email
+      </td>
+      <td>admin@example.com</td>
+      <td>
+        <a data-confirm="Are you sure?" rel="nofollow" data-method="delete" href="/satellites/3"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        email
+      </td>
+      <td>user@example.com</td>
+      <td>
+        <a data-confirm="Are you sure?" rel="nofollow" data-method="delete" href="/satellites/7"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <button type="button" class="btn btn-success">Add</button>
+  <button type="button" class="btn btn-primary">Add all</button>
+</div>
