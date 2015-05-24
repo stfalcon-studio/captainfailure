@@ -16,23 +16,46 @@ class ServersController < ApplicationController
   end
 
   def create
-    @server = Server.create(server_params)
+    @server = Server.new
+    @server.dns_name = server_params['dns_name']
+    if server_params['ip_address'] == ''
+        @server.resolv_ip
+    else
+      @server.ip_address = server_params['ip_address']
+    end
+    @server.comment = server_params['comment']
+    @server.save
     if @server.errors.empty?
       flash[:notice] = 'New server successfully added.'
       redirect_to servers_path
     else
-      flash.now[:alert] = 'You made mistakes in your form. Please correct them.'
+      if @server.errors.messages[:ip_address].include?('can\'t be blank')
+        flash.now[:alert] = 'Can\'t resolve DNS name. Please, enter IP address manually.'
+      else
+        flash.now[:alert] = 'You made mistakes in your form. Please correct them.'
+      end
       render 'edit'
     end
   end
 
   def update
-    @server.update_attributes(server_params)
+    @server.dns_name = server_params['dns_name']
+    if server_params['ip_address'] == ''
+      @server.resolv_ip
+    else
+      @server.ip_address = server_params['ip_address']
+    end
+    @server.comment = server_params['comment']
+    @server.save
     if @server.errors.empty?
       flash[:notice] = 'Information about server successfully updated.'
       redirect_to servers_path
     else
-      flash.now[:alert] = 'You made mistakes in your form. Please correct them.'
+      if @server.errors.messages[:ip_address].include?('can\'t be blank')
+        flash.now[:alert] = 'Can\'t resolve DNS name. Please, enter IP address manually.'
+      else
+        flash.now[:alert] = 'You made mistakes in your form. Please correct them.'
+      end
       render 'new'
     end
   end
