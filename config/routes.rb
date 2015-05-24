@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   # patch 'users/manage/:id' => 'manageusers#update'
   resources :manageusers, path: '/users/manage', as: :user
   resources :servers
+  resources  :satellites
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
