@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150524131545) do
+ActiveRecord::Schema.define(version: 20150527113425) do
 
   create_table "satellites", force: :cascade do |t|
     t.string   "name"
@@ -21,11 +21,12 @@ ActiveRecord::Schema.define(version: 20150524131545) do
   end
 
   create_table "servers", force: :cascade do |t|
-    t.string   "dns_name",   null: false
-    t.string   "ip_address", null: false
+    t.string   "dns_name",               null: false
+    t.string   "ip_address",             null: false
     t.string   "comment"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+    t.integer  "alert_on",   default: 0
   end
 
   add_index "servers", ["dns_name"], name: "index_servers_on_dns_name"

@@ -1,3 +1,4 @@
 <%= f.input :dns_name, label: 'DNS name' %>
+<%= f.input :alert_on, collection: Server.alert_ons.keys, selected: @server.alert_on, label: 'Alert if' %>
 <%= f.input :ip_address, label: 'IP address (leave empty to resolve via DNS)' %>
 <%= f.input :comment %>

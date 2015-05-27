@@ -41,11 +41,12 @@ class ServersController < ApplicationController
     else
       @server.ip_address = server_params['ip_address']
     end
-    @server.comment = server_params['comment']
+    @server.comment  = server_params['comment']
+    @server.alert_on = server_params['alert_on']
     @server.save
     if @server.errors.empty?
       flash[:notice] = 'New server successfully added.'
-      redirect_to servers_path
+      redirect_to server_path(@server)
     else
       if @server.errors.messages[:ip_address].include?('can\'t be blank')
         flash.now[:alert] = 'Can\'t resolve DNS name. Please, enter IP address manually.'
@@ -63,11 +64,12 @@ class ServersController < ApplicationController
     else
       @server.ip_address = server_params['ip_address']
     end
-    @server.comment = server_params['comment']
+    @server.comment  = server_params['comment']
+    @server.alert_on = server_params['alert_on']
     @server.save
     if @server.errors.empty?
       flash[:notice] = 'Information about server successfully updated.'
-      redirect_to servers_path
+      redirect_to server_path(@server)
     else
       if @server.errors.messages[:ip_address].include?('can\'t be blank')
         flash.now[:alert] = 'Can\'t resolve DNS name. Please, enter IP address manually.'
@@ -90,7 +92,7 @@ class ServersController < ApplicationController
   end
 
   def server_params
-    params.require(:server).permit(:dns_name, :ip_address, :comment)
+    params.require(:server).permit(:dns_name, :ip_address, :comment, :alert_on)
   end
 
   def find_server
