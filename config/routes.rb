@@ -11,11 +11,13 @@ Rails.application.routes.draw do
   # patch 'users/manage/:id' => 'manageusers#update'
   resources :manageusers, path: '/users/manage', as: :user
   resources :servers do
-    delete 'remove_satellite/:id' => 'servers#remove_satellite'
-    post   'add_satellite/:id'    => 'servers#add_satellite'
-    post   'add_all_satellites'   => 'servers#add_all_satellites'
+    delete 'remove_satellite/:id'    => 'servers#remove_satellite'
+    post   'add_satellite/:id'       => 'servers#add_satellite'
+    post   'add_all_satellites'      => 'servers#add_all_satellites'
+    delete 'remove_notification/:id' => 'servers#remove_notification'
   end
   resources  :satellites
+  resources  :notifications
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

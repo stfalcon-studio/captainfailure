@@ -16,7 +16,7 @@ class ServersController < ApplicationController
 
   before_action :set_active
   before_action :find_server,               only: [:show, :edit, :update, :destroy]
-  before_action :find_server_for_satellite, only: [:remove_satellite, :add_satellite, :add_all_satellites]
+  before_action :find_server_for_satellite, only: [:remove_satellite, :add_satellite, :add_all_satellites, :remove_notification]
 
   def index
     @servers = Server.all
@@ -95,6 +95,11 @@ class ServersController < ApplicationController
 
   def add_all_satellites
     @server.satellites = Satellite.all
+    redirect_to server_path(@server)
+  end
+
+  def remove_notification
+    ServerNotification.where(server_id: params[:server_id], notification_id: params[:id]).first.delete
     redirect_to server_path(@server)
   end
 

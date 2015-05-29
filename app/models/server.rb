@@ -17,6 +17,8 @@ class Server < ActiveRecord::Base
   validates :ip_address, presence: true, format: { :with => Resolv::IPv4::Regex }
   enum alert_on: { 'All satellites failed': 0, 'One satellite failed': 1 }
   has_and_belongs_to_many :satellites
+  has_many :server_notifications
+  has_many :notifications, through: :server_notifications
 
   def resolv_ip
     begin

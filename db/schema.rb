@@ -11,7 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150527132717) do
+ActiveRecord::Schema.define(version: 20150529091402) do
+
+  create_table "notifications", force: :cascade do |t|
+    t.integer  "notification_type"
+    t.string   "value"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+  end
 
   create_table "satellites", force: :cascade do |t|
     t.string   "name"
@@ -24,6 +31,17 @@ ActiveRecord::Schema.define(version: 20150527132717) do
     t.integer "satellite_id"
     t.integer "server_id"
   end
+
+  create_table "server_notifications", force: :cascade do |t|
+    t.integer  "server_id"
+    t.integer  "notification_id"
+    t.integer  "fail_to_notify_count", default: 1, null: false
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
+  end
+
+  add_index "server_notifications", ["notification_id"], name: "index_server_notifications_on_notification_id"
+  add_index "server_notifications", ["server_id"], name: "index_server_notifications_on_server_id"
 
   create_table "servers", force: :cascade do |t|
     t.string   "dns_name",               null: false

@@ -1,0 +1,9 @@
+<div class="container navless-container">
+  <h3>Add new notification</h3>
+  <div class="col-md-6">
+    <%= simple_form_for @notification do |f| %>
+        <%= render partial: 'form', locals: { f: f } %>
+        <%= f.button :submit %>
+    <% end %>
+  </div>
+</div>

@@ -53,33 +53,15 @@
     </tr>
     </thead>
     <tbody>
-    <tr>
-      <td>
-        email
-      </td>
-      <td>jeka@example.com</td>
-      <td>
-        <a data-confirm="Are you sure?" rel="nofollow" data-method="delete" href="/satellites/2"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        email
-      </td>
-      <td>admin@example.com</td>
-      <td>
-        <a data-confirm="Are you sure?" rel="nofollow" data-method="delete" href="/satellites/3"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        email
-      </td>
-      <td>user@example.com</td>
-      <td>
-        <a data-confirm="Are you sure?" rel="nofollow" data-method="delete" href="/satellites/7"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
-      </td>
-    </tr>
+    <% @server.notifications.each do |n| %>
+        <tr>
+          <td><%= n.notification_type %></td>
+          <td><%= n.value %></td>
+          <td>
+            <%= link_to raw('<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>'), "/servers/#{@server.id}/remove_notification/#{n.id}", method: :delete, data: { confirm: 'Are you sure?'} %>
+          </td>
+        </tr>
+    <% end %>
     </tbody>
   </table>
   <button type="button" class="btn btn-success">Add</button>
