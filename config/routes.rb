@@ -10,7 +10,11 @@ Rails.application.routes.draw do
   # get 'users/manage/:id' => 'manageusers#edit', :as => :user
   # patch 'users/manage/:id' => 'manageusers#update'
   resources :manageusers, path: '/users/manage', as: :user
-  resources :servers
+  resources :servers do
+    delete 'remove_satellite/:id' => 'servers#remove_satellite'
+    post   'add_satellite/:id'    => 'servers#add_satellite'
+    post   'add_all_satellites'   => 'servers#add_all_satellites'
+  end
   resources  :satellites
 
   # Example of regular route:

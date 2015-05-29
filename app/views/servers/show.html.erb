@@ -20,37 +20,28 @@
     </tr>
     </thead>
     <tbody>
+    <% @server.satellites.each do |s| %>
     <tr>
+      <td><%= s.name %></td>
+      <td><%= s.description %></td>
       <td>
-        aws-ierland
-      </td>
-      <td>my personal instance in AWS(Ierland)</td>
-      <td>
-        <a data-confirm="Are you sure?" rel="nofollow" data-method="delete" href="/satellites/2"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+        <%= link_to raw('<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>'), "/servers/#{@server.id}/remove_satellite/#{s.id}", method: :delete, data: { confirm: 'Are you sure?'} %>
       </td>
     </tr>
-    <tr>
-      <td>
-        de.example.com
-      </td>
-      <td>some server in Germany</td>
-      <td>
-        <a data-confirm="Are you sure?" rel="nofollow" data-method="delete" href="/satellites/3"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        ua.example.com
-      </td>
-      <td>some server in Ukraine</td>
-      <td>
-        <a data-confirm="Are you sure?" rel="nofollow" data-method="delete" href="/satellites/7"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
-      </td>
-    </tr>
+    <% end %>
     </tbody>
   </table>
-  <button type="button" class="btn btn-success">Add</button>
-  <button type="button" class="btn btn-primary">Add all</button>
+  <% unless @server.satellites.count == @satellites.count %>
+      <div class="btn-group">
+        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Add <span class="caret"></span></button>
+        <ul class="dropdown-menu" role="menu">
+          <% @satellites.each do |satellite| %>
+              <%= raw "<li>#{link_to satellite.name, "/servers/#{@server.id}/add_satellite/#{satellite.id}", method: :post}</li>" unless @server.satellites.include?(satellite)%>
+          <% end %>
+        </ul>
+      </div>
+      <%= link_to 'Add all', "/servers/#{@server.id}/add_all_satellites", method: :post, class: 'btn btn-primary' %>
+  <% end %>
   <hr>
   <h3>Notifications</h3>
   <table class="table table-striped">

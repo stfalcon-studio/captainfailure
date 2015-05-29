@@ -18,4 +18,5 @@ class Satellite < ActiveRecord::Base
                      tokenizer: lambda { |str| str.split(/\s+/) },
                      too_long: "Please choose a name that is only %{count} word."
                  }
+  has_and_belongs_to_many :servers
 end

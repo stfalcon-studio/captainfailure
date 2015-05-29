@@ -15,14 +15,15 @@
 class ServersController < ApplicationController
 
   before_action :set_active
-  before_action :find_server, only: [:show, :edit, :update, :destroy]
+  before_action :find_server,               only: [:show, :edit, :update, :destroy]
+  before_action :find_server_for_satellite, only: [:remove_satellite, :add_satellite, :add_all_satellites]
 
   def index
     @servers = Server.all
   end
 
   def show
-
+    @satellites = Satellite.all
   end
 
   def new
@@ -80,6 +81,23 @@ class ServersController < ApplicationController
     end
   end
 
+  def remove_satellite
+    @server.satellites.delete(params[:id])
+    redirect_to server_path(@server)
+  end
+
+  def add_satellite
+    satellite = Satellite.where(id: params[:id]).first
+    render text: 'Not found', status: 404 unless satellite
+    @server.satellites << satellite
+    redirect_to server_path(@server)
+  end
+
+  def add_all_satellites
+    @server.satellites = Satellite.all
+    redirect_to server_path(@server)
+  end
+
   def destroy
     @server.destroy
     redirect_to servers_path
@@ -97,6 +115,11 @@ class ServersController < ApplicationController
 
   def find_server
     @server = Server.where(id: params[:id]).first
+    render text: 'Not found', status: 404 unless @server
+  end
+
+  def find_server_for_satellite
+    @server = Server.where(id: params[:server_id]).first
     render text: 'Not found', status: 404 unless @server
   end
 
