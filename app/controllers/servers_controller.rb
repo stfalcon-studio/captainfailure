@@ -16,14 +16,16 @@ class ServersController < ApplicationController
 
   before_action :set_active
   before_action :find_server,               only: [:show, :edit, :update, :destroy]
-  before_action :find_server_for_satellite, only: [:remove_satellite, :add_satellite, :add_all_satellites, :remove_notification]
+  before_action :find_server_for_satellite, only: [:remove_satellite, :add_satellite, :add_all_satellites, :add_notification, :add_all_notifications, :remove_notification, :notification_fail_count_up, :notification_fail_count_down]
+  before_action :find_server_notification,  only: [:notification_fail_count_up, :notification_fail_count_down]
 
   def index
     @servers = Server.all
   end
 
   def show
-    @satellites = Satellite.all
+    @satellites    = Satellite.all
+    @notifications = Notification.all
   end
 
   def new
@@ -81,11 +83,6 @@ class ServersController < ApplicationController
     end
   end
 
-  def remove_satellite
-    @server.satellites.delete(params[:id])
-    redirect_to server_path(@server)
-  end
-
   def add_satellite
     satellite = Satellite.where(id: params[:id]).first
     render text: 'Not found', status: 404 unless satellite
@@ -98,8 +95,37 @@ class ServersController < ApplicationController
     redirect_to server_path(@server)
   end
 
+  def remove_satellite
+    @server.satellites.delete(params[:id])
+    redirect_to server_path(@server)
+  end
+
+  def add_notification
+    notification = Notification.where(id: params[:id]).first
+    render text: 'Not found', status: 404 unless notification
+    @server.notifications << notification
+    redirect_to server_path(@server)
+  end
+
+  def add_all_notifications
+    @server.notifications = Notification.all
+    redirect_to server_path(@server)
+  end
+
   def remove_notification
     ServerNotification.where(server_id: params[:server_id], notification_id: params[:id]).first.delete
+    redirect_to server_path(@server)
+  end
+
+  def notification_fail_count_up
+    @server_notification.fail_to_notify_count += 1
+    @server_notification.save
+    redirect_to server_path(@server)
+  end
+
+  def notification_fail_count_down
+    @server_notification.fail_to_notify_count -= 1
+    @server_notification.save
     redirect_to server_path(@server)
   end
 
@@ -126,6 +152,11 @@ class ServersController < ApplicationController
   def find_server_for_satellite
     @server = Server.where(id: params[:server_id]).first
     render text: 'Not found', status: 404 unless @server
+  end
+
+  def find_server_notification
+    @server_notification = ServerNotification.where(server_id: params[:server_id], notification_id: params[:id]).first
+    render text: 'Not found', status: 404 unless @server_notification
   end
 
 end

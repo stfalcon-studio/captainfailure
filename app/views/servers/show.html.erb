@@ -49,6 +49,7 @@
     <tr>
       <th>Type</th>
       <th>Value</th>
+      <th>Fails to notify</th>
       <th></th>
     </tr>
     </thead>
@@ -57,6 +58,7 @@
         <tr>
           <td><%= n.notification_type %></td>
           <td><%= n.value %></td>
+          <td><%= link_to raw('<span class="glyphicon glyphicon-minus" aria-hidden="true"></span>'), "/servers/#{@server.id}/notification_fail_count_down/#{n.id}", method: :post %> <%= notification_fail_count(@server.id, n.id) %> <%= link_to raw('<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>'), "/servers/#{@server.id}/notification_fail_count_up/#{n.id}", method: :post %></td>
           <td>
             <%= link_to raw('<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>'), "/servers/#{@server.id}/remove_notification/#{n.id}", method: :delete, data: { confirm: 'Are you sure?'} %>
           </td>
@@ -64,6 +66,15 @@
     <% end %>
     </tbody>
   </table>
-  <button type="button" class="btn btn-success">Add</button>
-  <button type="button" class="btn btn-primary">Add all</button>
+  <% unless @server.notifications.count == @notifications.count %>
+      <div class="btn-group">
+        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Add <span class="caret"></span></button>
+        <ul class="dropdown-menu" role="menu">
+          <% @notifications.each do |notification| %>
+              <%= raw "<li>#{link_to notification.value, "/servers/#{@server.id}/add_notification/#{notification.id}", method: :post}</li>" unless @server.notifications.include?(notification)%>
+          <% end %>
+        </ul>
+      </div>
+      <%= link_to 'Add all', "/servers/#{@server.id}/add_all_notifications", method: :post, class: 'btn btn-primary' %>
+  <% end %>
 </div>
