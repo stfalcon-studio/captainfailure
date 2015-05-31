@@ -1,3 +1,17 @@
+# Copyright 2015 Evgeniy Gurinovich
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 class Check < ActiveRecord::Base
   enum check_type: { icmp: 0, port_open: 1, http_code: 2, http_keyword: 3 }
   enum check_via:  { ip: 0, domain: 1 }
@@ -13,28 +27,13 @@ class Check < ActiveRecord::Base
       raise_save_error(check, 'TCP port required.') if check.tcp_port == nil
     end
     if (check.check_type == 'http_code') or (check.check_type == 'http_keyword')
-      check.errors[:base] << 'HTTP code required.' if check.http_code == nil
-      self.errors[:base] << 'HTTP vhost required.' if check.http_vhost == nil
+      raise_save_error(check, 'HTTP code required.') if check.http_code == nil
+      raise_save_error(check, 'HTTP vhost required.') if check.http_vhost == nil
     end
     if check.check_type == 'http_keyword'
-      check.errors[:base] << 'HTTP keyword required.' if check.http_keyword == nil
+      raise_save_error(check, 'HTTP keyword required.') if check.http_keyword == nil
     end
 
-    #validates :tcp_port,     presence: true, unless: check_type == 'icmp'
-    #validates :http_vhost,   presence: true, if: (check_type == 'http_code') or (check_type == 'http_keyword')
-    #validates :http_code,    presence: true, if: (check_type == 'http_code') or (check_type == 'http_keyword')
-    #validates :http_keyword, presence: true, if: (check_type == 'http_keyword')
-  #   if check.check_type == 1
-  #     validates :tcp_port, presence: true
-  #   elsif check.check_type == 2
-  #     validates :tcp_port,  presence: true
-  #     validates :http_code, presence: true
-  #   elsif check.check_type == 3
-  #     validates :tcp_port,     presence: true
-  #     validates :http_code,    presence: true
-  #     validates :http_keyword, presence: true
-  #     validates :http_vhost,   presence: true
-  #   end
   end
 
   private
