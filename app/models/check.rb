@@ -33,7 +33,7 @@ class Check < ActiveRecord::Base
       raise_save_error(check, 'HTTP uri required.') if check.http_uri == nil
     end
     if check.check_type == 'http_keyword'
-      raise_save_error(check, 'HTTP uri required.') if check.http_uri == nil
+      raise_save_error(check, 'HTTP keyword required.') if check.http_keyword == nil
     end
 
   end
