@@ -43,6 +43,41 @@
       <%= link_to 'Add all', "/servers/#{@server.id}/add_all_satellites", method: :post, class: 'btn btn-primary' %>
   <% end %>
   <hr>
+  <h3>Checks</h3>
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th></th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @server.checks.each do |n| %>
+    <% via = @server.ip_address if n.check_via == 'ip' %>
+    <% via = @server.dns_name if n.check_via == 'domain' %>
+        <tr>
+          <td>
+            <%= raw("Send <strong>#{n.icmp_count}</strong> ICMP packet to <strong>#{via}</strong>") if n.check_type == 'icmp' %>
+            <%= raw("Check if <strong>#{n.tcp_port}</strong> port open on <strong>#{via}</strong>") if n.check_type == 'port_open' %>
+            <%= raw("Check <a href=\"#{n.http_protocol}://#{n.http_vhost}#{n.http_uri}\">#{n.http_protocol}://#{n.http_vhost}#{n.http_uri}</a> for <strong>#{n.http_code}</strong> HTTP code on <strong>#{via}</strong>") if n.check_type == 'http_code' %>
+            <%= raw("Check <a href=\"#{n.http_protocol}://#{n.http_vhost}#{n.http_uri}\">#{n.http_protocol}://#{n.http_vhost}#{n.http_uri}</a> for <strong>#{n.http_code}</strong> HTTP code and keyword <strong>#{n.http_keyword}</strong> on <strong>#{via}</strong>") if n.check_type == 'http_keyword' %>
+          </td>
+          <td>
+            <%= link_to raw('<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>'), "/servers/#{@server.id}/remove_check/#{n.id}", method: :delete, data: { confirm: 'Are you sure?'} %>
+          </td>
+        </tr>
+    <% end %>
+    </tbody>
+  </table>
+  <div class="btn-group">
+    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Add <span class="caret"></span></button>
+    <ul class="dropdown-menu" role="menu">
+      <% @check_types.each do |type| %>
+          <li><%= link_to type, "/servers/#{@server.id}/add_check", method: :post %></li>
+      <% end %>
+    </ul>
+  </div>
+  <hr>
   <h3>Notifications</h3>
   <table class="table table-striped">
     <thead>

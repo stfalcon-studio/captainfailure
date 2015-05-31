@@ -26,6 +26,7 @@ class ServersController < ApplicationController
   def show
     @satellites    = Satellite.all
     @notifications = Notification.all
+    @check_types   = Check.check_types.keys
   end
 
   def new

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150530164638) do
+ActiveRecord::Schema.define(version: 20150531164020) do
 
   create_table "checks", force: :cascade do |t|
     t.integer  "server_id"
@@ -21,8 +21,11 @@ ActiveRecord::Schema.define(version: 20150530164638) do
     t.integer  "http_code"
     t.string   "http_keyword"
     t.string   "http_vhost"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+    t.integer  "icmp_count",    default: 5
+    t.string   "http_uri"
+    t.integer  "http_protocol", default: 0
   end
 
   create_table "notifications", force: :cascade do |t|
