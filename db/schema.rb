@@ -11,7 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150529091402) do
+ActiveRecord::Schema.define(version: 20150530164638) do
+
+  create_table "checks", force: :cascade do |t|
+    t.integer  "server_id"
+    t.integer  "check_type"
+    t.integer  "check_via"
+    t.integer  "tcp_port"
+    t.integer  "http_code"
+    t.string   "http_keyword"
+    t.string   "http_vhost"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
 
   create_table "notifications", force: :cascade do |t|
     t.integer  "notification_type"
