@@ -59,8 +59,8 @@
           <td>
             <%= raw("Send <strong>#{n.icmp_count}</strong> ICMP packet to <strong>#{via}</strong>") if n.check_type == 'icmp' %>
             <%= raw("Check if <strong>#{n.tcp_port}</strong> port open on <strong>#{via}</strong>") if n.check_type == 'port_open' %>
-            <%= raw("Check <a href=\"#{n.http_protocol}://#{n.http_vhost}#{n.http_uri}\">#{n.http_protocol}://#{n.http_vhost}#{n.http_uri}</a> for <strong>#{n.http_code}</strong> HTTP code on <strong>#{via}</strong>") if n.check_type == 'http_code' %>
-            <%= raw("Check <a href=\"#{n.http_protocol}://#{n.http_vhost}#{n.http_uri}\">#{n.http_protocol}://#{n.http_vhost}#{n.http_uri}</a> for <strong>#{n.http_code}</strong> HTTP code and keyword <strong>#{n.http_keyword}</strong> on <strong>#{via}</strong>") if n.check_type == 'http_keyword' %>
+            <%= raw("Check <a target=\"_blank\" href=\"#{n.http_protocol}://#{n.http_vhost}#{n.http_uri}\">#{n.http_protocol}://#{n.http_vhost}#{n.http_uri}</a> for <strong>#{n.http_code}</strong> HTTP code on <strong>#{via}</strong>") if n.check_type == 'http_code' %>
+            <%= raw("Check <a target=\"_blank\" href=\"#{n.http_protocol}://#{n.http_vhost}#{n.http_uri}\">#{n.http_protocol}://#{n.http_vhost}#{n.http_uri}</a> for <strong>#{n.http_code}</strong> HTTP code and keyword <strong>#{n.http_keyword}</strong> on <strong>#{via}</strong>") if n.check_type == 'http_keyword' %>
           </td>
           <td>
             <%= link_to raw('<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>'), "/servers/#{@server.id}/remove_check/#{n.id}", method: :delete, data: { confirm: 'Are you sure?'} %>
