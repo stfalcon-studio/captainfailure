@@ -19,6 +19,7 @@ class Server < ActiveRecord::Base
   has_and_belongs_to_many :satellites
   has_many :server_notifications
   has_many :checks
+  accepts_nested_attributes_for :checks
   has_many :notifications, through: :server_notifications
 
   def resolv_ip

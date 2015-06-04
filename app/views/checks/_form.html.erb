@@ -1,0 +1,31 @@
+<%= f.input :check_type, collection: Check.check_types.keys %>
+<div id="check_via">
+  <%= f.input :check_via, collection: Check.check_via.keys, selected: @check.check_via, label: 'Check via:' %>
+</div>
+<div id="enabled">
+  <%= f.input :enabled, collection: Check.enableds.keys, selected: @check.enabled, label: 'Enable check?' %>
+</div>
+<div id="icmp_count">
+  <%= f.input :icmp_count, label: 'Count' %>
+</div>
+<div id="tcp_port">
+  <%= f.input :tcp_port, label: 'TCP port' %>
+</div>
+<div id="http_code">
+  <%= f.input :http_code, label: 'HTTP responce code' %>
+</div>
+<div id="http_vhost">
+  <%= f.input :http_vhost, label: 'HTTP virtual host' %>
+</div>
+<div id="http_uri">
+  <%= f.input :http_uri, label: 'HTTP uri' %>
+</div>
+<div id="http_protocol">
+  <%= f.input :http_protocol, collection: Check.http_protocols.keys, selected: @check.http_protocol, label: 'HTTP protocol' %>
+</div>
+<div id="http_keyword">
+  <%= f.input :http_keyword, label: 'HTTP keyword' %>
+</div>
+<div id="check_interval">
+  <%= f.input :check_interval, label: 'Check interval (in minutes)' %>
+</div>

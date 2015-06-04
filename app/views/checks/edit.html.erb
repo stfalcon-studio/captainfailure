@@ -1,10 +1,10 @@
 <div class="container navless-container">
-  <h3>Add new server</h3>
+  <h3>Edit check</h3>
   <div class="col-md-6">
-    <%= simple_form_for @server do |f| %>
+    <%= simple_form_for [@server, @check], url: @action_url do |f| %>
         <%= render partial: 'form', locals: { f: f } %>
         <div id="form_submit">
-            <%= f.button :submit %>
+          <%= f.button :submit, value: 'Update check' %>
         </div>
     <% end %>
   </div>

@@ -16,6 +16,7 @@ class Check < ActiveRecord::Base
   enum check_type:    { icmp: 0, port_open: 1, http_code: 2, http_keyword: 3 }
   enum check_via:     { ip: 0, domain: 1 }
   enum http_protocol: { http: 0, https: 1 }
+  enum enabled:       {yes: true, no: false}
 
   validates :check_via, presence: true
   validates_numericality_of :tcp_port, greater_than: 0, less_than: 65535, allow_nil: true
@@ -29,11 +30,12 @@ class Check < ActiveRecord::Base
     end
     if (check.check_type == 'http_code') or (check.check_type == 'http_keyword')
       raise_save_error(check, 'HTTP code required.') if check.http_code == nil
-      raise_save_error(check, 'HTTP vhost required.') if check.http_vhost == nil
-      raise_save_error(check, 'HTTP uri required.') if check.http_uri == nil
+      raise_save_error(check, 'HTTP vhost required.') if check.http_vhost == ''
+      raise_save_error(check, 'HTTP uri required.') if check.http_uri == ''
+      raise_save_error(check, 'HTTP protocol required.') if check.http_protocol == nil
     end
     if check.check_type == 'http_keyword'
-      raise_save_error(check, 'HTTP keyword required.') if check.http_keyword == nil
+      raise_save_error(check, 'HTTP keyword required.') if check.http_keyword == ''
     end
 
   end
