@@ -1,0 +1,11 @@
+<div class="container navless-container">
+  <%= render partial: 'settings/settings_nav' %>
+  <div class="col-md-4">
+    <%= simple_form_for @setting, url: '/settings/turbosms' do |f| %>
+        <%= f.input :user %>
+        <%= f.input :password, input_html: { value: @setting.password }%>
+        <%= f.input :name_in_sms %>
+        <%= f.button :submit, value: 'Save' %>
+    <% end %>
+  </div>
+</div>

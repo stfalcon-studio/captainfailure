@@ -17,6 +17,7 @@
         <li <%= 'class=active' if @active == 'notifications' %>><a href="/notifications">Notifications</a></li>
         <% if current_user.is_admin %>
         <li <%= 'class=active' if @active == 'users' %>><a href="/users/manage">Users</a></li>
+        <li <%= 'class=active' if @active == 'settings' %>><a href="/settings">Settings</a></li>
         <% end %>
       </ul>
       <% if user_signed_in? %>

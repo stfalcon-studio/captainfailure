@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150603131535) do
+ActiveRecord::Schema.define(version: 20150605084630) do
 
   create_table "checks", force: :cascade do |t|
     t.integer  "server_id"
@@ -71,6 +71,13 @@ ActiveRecord::Schema.define(version: 20150603131535) do
 
   add_index "servers", ["dns_name"], name: "index_servers_on_dns_name"
   add_index "servers", ["ip_address"], name: "index_servers_on_ip_address"
+
+  create_table "settings", force: :cascade do |t|
+    t.string "name",  null: false
+    t.string "value", null: false
+  end
+
+  add_index "settings", ["name"], name: "index_settings_on_name"
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "",    null: false

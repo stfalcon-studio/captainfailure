@@ -22,5 +22,11 @@ Rails.application.routes.draw do
 
   resources  :satellites
   resources  :notifications
-
+  resource  :settings, only: [:index] do
+    get   '/',         to: 'settings#index'
+    get   '/rabbitmq', to: 'settings#rabbitmq'
+    patch '/rabbitmq', to: 'settings#rabbitmq_update'
+    get   '/turbosms',   to: 'settings#turbosms'
+    patch '/turbosms',   to: 'settings#turbosms_update'
+  end
 end

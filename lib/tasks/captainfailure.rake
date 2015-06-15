@@ -31,4 +31,12 @@ namespace :captainfailure do
     end
   end
 
+  desc 'Load default settings'
+  task default_settings: :environment do
+    STDOUT.puts 'In progress...'.green
+    Setting.create(name: 'rabbitmq', value: { host: 'localhost', port: 5672, user: 'guest', password: 'guest' } )
+    Setting.create(name: 'turbosms', value: { user: '', password: '', name_in_sms: '' } )
+    STDOUT.puts 'Done!'.green
+  end
+
 end
