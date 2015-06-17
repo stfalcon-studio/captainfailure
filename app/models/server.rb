@@ -22,6 +22,11 @@ class Server < ActiveRecord::Base
   accepts_nested_attributes_for :checks
   has_many :notifications, through: :server_notifications
 
+  before_destroy do |server|
+    server.checks.all.each { |check| check.destroy }
+    ServerNotification.where(server_id: server.id).each { |server_notification| server_notification.delete }
+  end
+
   def resolv_ip
     begin
       self.ip_address = Socket::getaddrinfo(self.dns_name, Socket::SOCK_STREAM)[0][3]

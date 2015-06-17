@@ -39,4 +39,19 @@ namespace :captainfailure do
     STDOUT.puts 'Done!'.green
   end
 
+  desc 'Run checks on satellites'
+  task run_checks: :environment do
+    require 'bunny'
+    rabbitmq_settings = Setting.where(name: 'rabbitmq').first
+    rabbitmq_connection = Bunny.new(host: rabbitmq_settings.host, port: rabbitmq_settings.port,
+                                    username: rabbitmq_settings.user, password: rabbitmq_settings.password)
+    Check.all.each do |check|
+      if (Time.now.utc - check.updated_at > check.check_interval.to_i.minutes) and check.enabled
+        p check
+        check.updated_at = Time.now.utc
+        check.save
+      end
+    end
+  end
+
 end
