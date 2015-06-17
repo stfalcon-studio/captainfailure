@@ -45,9 +45,28 @@ namespace :captainfailure do
     rabbitmq_settings = Setting.where(name: 'rabbitmq').first
     rabbitmq_connection = Bunny.new(host: rabbitmq_settings.host, port: rabbitmq_settings.port,
                                     username: rabbitmq_settings.user, password: rabbitmq_settings.password)
+    rabbitmq_connection.start
+    ch = rabbitmq_connection.create_channel
+    rabbit = ch.direct('captainfailure')
     Check.all.each do |check|
       if (Time.now.utc - check.updated_at > check.check_interval.to_i.minutes) and check.enabled
-        p check
+        server = Server.where(id: check.server_id).first
+        check_result = CheckResult.new
+        check_result.servers = server
+        check_result.checks = check
+        check_result.total_satellites = server.satellites.count
+        check_result.ready_satellites = 0
+        check_result.save
+        server.satellites.all.each do |satellite|
+          msg = check.serializable_hash
+          if msg['check_via'] == 'ip'
+            msg['ip'] = server.ip_address
+          else
+            msg['domain'] = server.dns_name
+          end
+          msg['check_result_id'] = check_result.id
+          rabbit.publish(msg.to_json, :routing_key => satellite.name)
+        end
         check.updated_at = Time.now.utc
         check.save
       end

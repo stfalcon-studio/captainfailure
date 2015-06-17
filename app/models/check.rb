@@ -23,6 +23,7 @@ class Check < ActiveRecord::Base
   validates_numericality_of :http_code, allow_nil: true
 
   belongs_to :server
+  has_many :check_results
 
   before_save do |check|
     unless check.check_type == 'icmp'

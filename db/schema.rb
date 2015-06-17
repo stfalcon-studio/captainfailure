@@ -11,7 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150605084630) do
+ActiveRecord::Schema.define(version: 20150617110828) do
+
+  create_table "check_results", force: :cascade do |t|
+    t.integer  "server_id"
+    t.integer  "check_id"
+    t.boolean  "passed"
+    t.integer  "total_satellites"
+    t.integer  "ready_satellites"
+    t.string   "satellites_data"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+  end
+
+  add_index "check_results", ["passed"], name: "index_check_results_on_passed"
 
   create_table "checks", force: :cascade do |t|
     t.integer  "server_id"
@@ -28,6 +41,7 @@ ActiveRecord::Schema.define(version: 20150605084630) do
     t.integer  "http_protocol",  default: 0
     t.boolean  "enabled",        default: true
     t.integer  "check_interval", default: 5
+    t.integer  "fail_count",     default: 0
   end
 
   create_table "notifications", force: :cascade do |t|
