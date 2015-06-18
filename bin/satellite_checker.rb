@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'bunny'
+require 'json'
 
 class SatelliteChecker
   def initialize
@@ -11,8 +12,17 @@ class SatelliteChecker
     def icmp_check(ip, icmp_count)
       system("ping -c #{icmp_count} #{ip}")
     end
+
     def resolve_domain(domain)
       Socket::getaddrinfo(domain, Socket::SOCK_STREAM)[0][3]
+    end
+
+    def send_report(rabbitmq_opts, report)
+      conn = Bunny.new(rabbitmq_opts)
+      conn.start
+      ch = conn.create_channel
+      q  = ch.queue('captainfailure_reports')
+      q.publish(report.to_json, :persistent => true)
     end
   end
 end
@@ -39,6 +49,12 @@ begin
     if check['check_type'] == 'icmp'
       result = SatelliteChecker.icmp_check(check['ip'], check['icmp_count'])
     end
+    report = {}
+    report[:result] = result
+    report[:check_result_id] = check['check_result_id']
+    report[:satellite] = satellite_name
+    report[:check_time] = Time.now.utc
+    SatelliteChecker.send_report(opts, report)
   end
 rescue Interrupt => _
   ch.close

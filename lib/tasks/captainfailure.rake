@@ -49,11 +49,11 @@ namespace :captainfailure do
     ch = rabbitmq_connection.create_channel
     rabbit = ch.direct('captainfailure')
     Check.all.each do |check|
-      if (Time.now.utc - check.updated_at > check.check_interval.to_i.minutes) and check.enabled
+      if (Time.now.utc - check.updated_at > check.check_interval.to_i.minutes) and check.enabled == 'yes'
         server = Server.where(id: check.server_id).first
         check_result = CheckResult.new
-        check_result.servers = server
-        check_result.checks = check
+        check_result.server = server
+        check_result.check = check
         check_result.total_satellites = server.satellites.count
         check_result.ready_satellites = 0
         check_result.save
@@ -73,4 +73,57 @@ namespace :captainfailure do
     end
   end
 
+  desc 'Processing reports from satellites'
+  task reports_processing: :environment do
+    require 'json'
+    require "#{Rails.root}/app/helpers/application_helper"
+    rabbitmq_settings = Setting.where(name: 'rabbitmq').first
+    rabbitmq_connection = Bunny.new(host: rabbitmq_settings.host, port: rabbitmq_settings.port,
+                                    username: rabbitmq_settings.user, password: rabbitmq_settings.password)
+    rabbitmq_connection.start
+    ch = rabbitmq_connection.create_channel
+    q  = ch.queue('captainfailure_reports')
+    q.subscribe(:ack => true, :block => true) do |delivery_info, properties, body|
+      puts " [x] Received #{body}"
+      report = JSON.parse(body)
+      check_result = CheckResult.where(id: report['check_result_id']).first
+      check_result.satellites_data << { name: report['satellite'], result: report['result'] }
+      check_result.ready_satellites += 1
+      check_result.save
+
+      if check_result.total_satellites == check_result.ready_satellites
+        server = Server.where(id: check_result.server_id).first
+        success_count = 0
+        check_result.satellites_data.each { |result| success_count += 1 if result[:result] }
+        if server.alert_on == 0
+          if success_count != 0
+            check_result.passed = true
+            check_result.check.fail_count = 0
+            check_result.save
+          else
+            check_result.passed = false
+            check_result.save
+            check_result.check.fail_count += 1
+            check_result.check.save
+            ApplicationHelper::AlertSender.new(server, check_result)
+          end
+        else
+          if success_count == check_result.total_satellites
+            check_result.passed = true
+            check_result.check.fail_count = 0
+            check_result.save
+          else
+            check_result.passed = false
+            check_result.save
+            check_result.check.fail_count += 1
+            check_result.check.save
+            ApplicationHelper::AlertSender.new(server, check_result)
+          end
+        end
+      end
+      puts " [x] Done"
+
+      ch.ack(delivery_info.delivery_tag)
+    end
+  end
 end

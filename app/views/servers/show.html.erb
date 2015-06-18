@@ -106,7 +106,7 @@
     </tbody>
   </table>
   <% unless @server.notifications.count == @notifications.count %>
-      <div class="btn-group">
+      <div class="btn-group dropup">
         <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Add <span class="caret"></span></button>
         <ul class="dropdown-menu" role="menu">
           <% @notifications.each do |notification| %>
