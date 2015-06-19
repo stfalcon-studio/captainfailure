@@ -16,10 +16,29 @@ module ApplicationHelper
       @server.notifications.each do |notification|
         notification_fail_count = notification_fail_count(@server.id, notification.id)
         if @check_result.check.fail_count >= notification_fail_count
-          AlertMailer.send_alert(notification.value, @check_result.check.check_type, @server.dns_name, text).deliver_now
+          if notification.notification_type == 'email'
+            AlertMailer.send_alert(notification.value, @check_result.check.check_type, @server.dns_name, text).deliver_now
+          elsif notification.notification_type == 'sms'
+            send_sms(notification.value, text)
+          end
         end
       end
 
+    end
+
+    def send_sms(number, text)
+      require 'turbosms'
+      setting = Setting.where(name: 'turbosms').first
+      TurboSMS.default_options[:login]    = setting.user
+      TurboSMS.default_options[:password] = setting.password
+      TurboSMS.default_options[:sender]   = setting.name_in_sms
+      if text.length > 159
+        sms_text = ''
+        159.times { |i| sms_text << text[i] }
+      else
+        sms_text = text
+      end
+      TurboSMS.send_sms(number, sms_text)
     end
 
     def notification_fail_count(server_id, notification_id)
