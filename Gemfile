@@ -37,6 +37,7 @@ gem 'rails_layout'
 gem 'simple_form'
 gem 'colorize'
 gem 'bunny'
+gem 'httpclient'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
