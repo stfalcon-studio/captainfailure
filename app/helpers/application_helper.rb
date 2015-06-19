@@ -13,8 +13,6 @@ module ApplicationHelper
       text = "Port #{@check_result.check.tcp_port} closed on #{@server.dns_name}" if @check_result.check.check_type == 'port_open'
       text = "Failed #{@check_result.check.http_protocol}://#{@check_result.check.http_vhost}#{@check_result.check.http_uri} for #{@check_result.check.http_code} HTTP code on #{@server.dns_name}" if @check_result.check.check_type == 'http_code'
       text = "Failed #{@check_result.check.http_protocol}://#{@check_result.check.http_vhost}#{@check_result.check.http_uri}for #{@check_result.check.http_code} HTTP code and keyword #{@check_result.check.http_keyword} on #{@server.dns_name}" if @check_result.check.check_type == 'http_keyword'
-      max_fail_count = 0
-      @server.notifications.each { |notification| max_fail_count = notification_fail_count(@server.id, notification.id) if notification_fail_count(@server.id, notification.id) > max_fail_count }
       @server.notifications.each do |notification|
         notification_fail_count = notification_fail_count(@server.id, notification.id)
         if @check_result.check.fail_count >= notification_fail_count
