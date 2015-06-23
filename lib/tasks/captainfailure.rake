@@ -137,4 +137,34 @@ namespace :captainfailure do
     CheckResult.where('updated_at <= ?', store_days.day.ago).each { |check_result| check_result.delete }
   end
 
+  desc 'Finish old checks without satellite reply'
+  task process_old_checks: :environment do
+    check_results = CheckResult.where('updated_at <= ?', 2.minutes.ago)
+    check_results = check_results.where(passed: nil)
+    check_results.each do |check_result|
+      if check_result.server.alert_on == 0
+        check_result.passed = false
+        check_result.save
+        check_result.check.fail_count += 1
+        check_result.check.save
+        ApplicationHelper::AlertSender.new(check_result.server, check_result)
+      else
+        success_count = 0
+        check_result.satellites_data.each { |result| success_count += 1 if result[:result] }
+        if success_count != 0
+          check_result.passed = true
+          check_result.save
+          check_result.check.fail_count = 0
+          check_result.check.save
+        else
+          check_result.passed = false
+          check_result.save
+          check_result.check.fail_count += 1
+          check_result.check.save
+          ApplicationHelper::AlertSender.new(check_result.server, check_result)
+        end
+      end
+    end
+  end
+
 end
