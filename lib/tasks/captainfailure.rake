@@ -99,6 +99,7 @@ namespace :captainfailure do
         if server.alert_on == 0
           if success_count != 0
             check_result.passed = true
+            check_result.save
             check_result.check.fail_count = 0
             check_result.check.save
           else
@@ -111,6 +112,7 @@ namespace :captainfailure do
         else
           if success_count == check_result.total_satellites
             check_result.passed = true
+            check_result.save
             check_result.check.fail_count = 0
             check_result.check.save
           else
