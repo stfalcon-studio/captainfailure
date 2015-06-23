@@ -34,7 +34,7 @@ namespace :captainfailure do
   desc 'Load default settings'
   task default_settings: :environment do
     STDOUT.puts 'In progress...'.green
-    Setting.create(name: 'rabbitmq', value: { host: 'localhost', port: 5672, user: 'guest', password: 'guest' } )
+    Setting.create(name: 'rabbitmq', value: { host: 'localhost', port: 5672, web_api_port: 15672, user: 'guest', password: 'guest' } )
     Setting.create(name: 'turbosms', value: { user: '', password: '', name_in_sms: '' } )
     Setting.create(name: 'general', value: { reports_days_to_store: '30' } )
     STDOUT.puts 'Done!'.green
@@ -43,10 +43,26 @@ namespace :captainfailure do
   desc 'Run checks on satellites'
   task run_checks: :environment do
     require 'bunny'
+    require 'json'
+    require 'httpclient'
     rabbitmq_settings = Setting.where(name: 'rabbitmq').first
     rabbitmq_connection = Bunny.new(host: rabbitmq_settings.host, port: rabbitmq_settings.port,
                                     username: rabbitmq_settings.user, password: rabbitmq_settings.password)
     rabbitmq_connection.start
+    http_client = HTTPClient.new
+    http_client.set_auth(nil, rabbitmq_settings.user, rabbitmq_settings.password)
+    api_data = JSON.parse(http_client.get("http://#{rabbitmq_settings.host}:#{rabbitmq_settings.web_api_port}/api/exchanges/%2F/captainfailure/bindings/source").content)
+    live_satellites = []
+    api_data.each { |data| live_satellites << data['properties_key'] }
+    Satellite.all.each do |satellite|
+      if live_satellites.include?(satellite.name)
+        satellite.status = true
+        satellite.save
+      else
+        satellite.status = false
+        satellite.save
+      end
+    end
     ch = rabbitmq_connection.create_channel
     rabbit = ch.direct('captainfailure')
     Check.all.each do |check|
@@ -59,14 +75,16 @@ namespace :captainfailure do
         check_result.ready_satellites = 0
         check_result.save
         server.satellites.all.each do |satellite|
-          msg = check.serializable_hash
-          if msg['check_via'] == 'ip'
-            msg['ip'] = server.ip_address
-          else
-            msg['domain'] = server.dns_name
+          if satellite.status
+            msg = check.serializable_hash
+            if msg['check_via'] == 'ip'
+              msg['ip'] = server.ip_address
+            else
+              msg['domain'] = server.dns_name
+            end
+            msg['check_result_id'] = check_result.id
+            rabbit.publish(msg.to_json, :routing_key => satellite.name)
           end
-          msg['check_result_id'] = check_result.id
-          rabbit.publish(msg.to_json, :routing_key => satellite.name)
         end
         check.updated_at = Time.now.utc
         check.save

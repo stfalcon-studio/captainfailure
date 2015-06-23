@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150617110828) do
+ActiveRecord::Schema.define(version: 20150623150257) do
 
   create_table "check_results", force: :cascade do |t|
     t.integer  "server_id"
@@ -54,8 +54,9 @@ ActiveRecord::Schema.define(version: 20150617110828) do
   create_table "satellites", force: :cascade do |t|
     t.string   "name"
     t.string   "description"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.boolean  "status",      default: false
   end
 
   create_table "satellites_servers", id: false, force: :cascade do |t|
