@@ -65,6 +65,31 @@ class SatelliteChecker
       Socket::getaddrinfo(domain, Socket::SOCK_STREAM)[0][3]
     end
 
+    def run_in_thread(opts, satellite_name, check_request)
+      Thread.new(opts, satellite_name, check_request) do |rabbitmq_opts, satellite, check|
+        if check['check_via'] == 'domain'
+          check['ip'] = SatelliteChecker.resolve_domain(check['domain'])
+        end
+        if check['check_type'] == 'icmp'
+          result = SatelliteChecker.icmp_check(check['ip'], check['icmp_count'])
+        elsif check['check_type'] == 'port_open'
+          result = SatelliteChecker.port_check(check['ip'], check['tcp_port'])
+        elsif check['check_type'] == 'http_code'
+          uri = "#{check['http_protocol']}://#{check['http_vhost']}:#{check['tcp_port']}#{check['http_uri']}"
+          result = SatelliteChecker.http_code_check(uri, check['http_code'])
+        elsif check['check_type'] == 'http_keyword'
+          uri = "#{check['http_protocol']}://#{check['http_vhost']}:#{check['tcp_port']}#{check['http_uri']}"
+          result = SatelliteChecker.http_keyword_check(uri, check['http_code'], check['http_keyword'])
+        end
+        report = {}
+        report[:result] = result
+        report[:check_result_id] = check['check_result_id']
+        report[:satellite] = satellite
+        report[:check_time] = Time.now.utc
+        send_report(rabbitmq_opts, report)
+      end
+    end
+
     def send_report(rabbitmq_opts, report)
       conn = Bunny.new(rabbitmq_opts)
       conn.start
@@ -91,26 +116,7 @@ begin
   q.subscribe(:block => true) do |delivery_info, properties, body|
     check = JSON.parse(body)
     puts " [x] #{delivery_info.routing_key}:#{body}"
-    if check['check_via'] == 'domain'
-      check['ip'] = SatelliteChecker.resolve_domain(check['domain'])
-    end
-    if check['check_type'] == 'icmp'
-      result = SatelliteChecker.icmp_check(check['ip'], check['icmp_count'])
-    elsif check['check_type'] == 'port_open'
-      result = SatelliteChecker.port_check(check['ip'], check['tcp_port'])
-    elsif check['check_type'] == 'http_code'
-      uri = "#{check['http_protocol']}://#{check['http_vhost']}:#{check['tcp_port']}#{check['http_uri']}"
-      result = SatelliteChecker.http_code_check(uri, check['http_code'])
-    elsif check['check_type'] == 'http_keyword'
-      uri = "#{check['http_protocol']}://#{check['http_vhost']}:#{check['tcp_port']}#{check['http_uri']}"
-      result = SatelliteChecker.http_keyword_check(uri, check['http_code'], check['http_keyword'])
-    end
-    report = {}
-    report[:result] = result
-    report[:check_result_id] = check['check_result_id']
-    report[:satellite] = satellite_name
-    report[:check_time] = Time.now.utc
-    SatelliteChecker.send_report(opts, report)
+    SatelliteChecker.run_in_thread(opts, satellite_name, check)
   end
 rescue Interrupt => _
   ch.close
