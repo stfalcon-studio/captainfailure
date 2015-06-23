@@ -28,5 +28,7 @@ Rails.application.routes.draw do
     patch '/rabbitmq', to: 'settings#rabbitmq_update'
     get   '/turbosms',   to: 'settings#turbosms'
     patch '/turbosms',   to: 'settings#turbosms_update'
+    get   '/general',   to: 'settings#general'
+    patch '/general',   to: 'settings#general_update'
   end
 end

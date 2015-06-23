@@ -4,9 +4,26 @@ class SettingsController < ApplicationController
   before_action :set_active
   before_action :find_rabbitmq, only: [:rabbitmq, :rabbitmq_update]
   before_action :find_turbosms, only: [:turbosms, :turbosms_update]
+  before_action :find_general, only:  [:general, :general_update]
 
   def index
-    redirect_to action: rabbitmq
+    redirect_to action: general
+  end
+
+  def general
+    @container_active = 'general'
+  end
+
+  def general_update
+    param = params.require(:setting).permit(:reports_days_to_store)
+    @setting.update_attributes(param)
+    if @setting.errors.empty?
+      flash[:notice] = 'Successfully saved.'
+      redirect_to action: general
+    else
+      flash.now[:alert] = 'You made mistakes in your form. Please correct them.'
+      render 'general'
+    end
   end
 
   def rabbitmq
@@ -51,6 +68,11 @@ class SettingsController < ApplicationController
 
   def set_active
     @active = 'settings'
+  end
+
+  def find_general
+    @setting = Setting.where(name: 'general').first
+    render text: 'Not found', status: 404 unless @setting
   end
 
   def find_rabbitmq

@@ -1,0 +1,9 @@
+<div class="container navless-container">
+  <%= render partial: 'settings/settings_nav' %>
+  <div class="col-md-4">
+    <%= simple_form_for @setting, url: '/settings/general' do |f| %>
+        <%= f.input :reports_days_to_store, label: 'Days to store checks results' %>
+        <%= f.button :submit, value: 'Save' %>
+    <% end %>
+  </div>
+</div>

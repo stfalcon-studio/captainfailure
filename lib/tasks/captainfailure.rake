@@ -36,6 +36,7 @@ namespace :captainfailure do
     STDOUT.puts 'In progress...'.green
     Setting.create(name: 'rabbitmq', value: { host: 'localhost', port: 5672, user: 'guest', password: 'guest' } )
     Setting.create(name: 'turbosms', value: { user: '', password: '', name_in_sms: '' } )
+    Setting.create(name: 'general', value: { reports_days_to_store: '30' } )
     STDOUT.puts 'Done!'.green
   end
 
@@ -126,4 +127,12 @@ namespace :captainfailure do
       ch.ack(delivery_info.delivery_tag)
     end
   end
+
+  desc 'Clean old reports from satellites'
+  task reports_clean: :environment do
+    setting = Setting.where(name: 'general').first
+    store_days = setting.reports_days_to_store.to_i
+    CheckResult.where('updated_at <= ?', store_days.day.ago).each { |check_result| check_result.delete }
+  end
+
 end
