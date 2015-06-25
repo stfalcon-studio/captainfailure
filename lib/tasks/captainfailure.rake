@@ -63,6 +63,7 @@ namespace :captainfailure do
         satellite.save
       end
     end
+    ApplicationHelper::CaptainFailureFail.all_satellite_down_warning if Satellite.alive_count == 0
     ch = rabbitmq_connection.create_channel
     rabbit = ch.direct('captainfailure')
     Check.all.each do |check|

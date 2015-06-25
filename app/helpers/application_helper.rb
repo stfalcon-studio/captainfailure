@@ -48,4 +48,29 @@ module ApplicationHelper
 
   end
 
+  class CaptainFailureFail
+    def initialize
+      @instance ||= self
+    end
+
+    class << self
+      def all_satellite_down_warning
+        alert_text = 'All satellites offline! Monitoring malfunction!'
+        Notification.all.each do |notification|
+          if notification.notification_type == 'email'
+            AlertMailer.send_alert(notification.value, 'Satellites', 'Captainfailure', alert_text).deliver_now
+          elsif notification.notification_type == 'sms'
+            SendSMS.new(notification.value, alert_text)
+          end
+        end
+      end
+    end
+  end
+
+  class SendSMS < AlertSender
+    def initialize(number, text)
+      send_sms(number, text)
+    end
+  end
+
 end
