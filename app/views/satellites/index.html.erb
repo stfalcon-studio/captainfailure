@@ -8,6 +8,7 @@
     <tr>
       <th>Name</th>
       <th>Description</th>
+      <th>State</th>
       <th></th>
     </tr>
     </thead>
@@ -21,6 +22,13 @@
             <%= satellite.name %>
           </td>
           <td><%= satellite.description %></td>
+          <td>
+            <% if satellite.status %>
+                <span class="label label-success">Online</span>
+            <% else %>
+                <span class="label label-danger">Offline</span>
+            <% end %>
+          </td>
           <td>
             <%= link_to raw('<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>'), satellite_path(satellite), method: :delete, data: { confirm: 'Are you sure?'} %>
           </td>

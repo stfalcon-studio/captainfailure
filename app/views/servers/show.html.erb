@@ -16,6 +16,7 @@
     <tr>
       <th>Name</th>
       <th>Description</th>
+      <th>State</th>
       <th></th>
     </tr>
     </thead>
@@ -24,6 +25,13 @@
     <tr>
       <td><%= s.name %></td>
       <td><%= s.description %></td>
+      <td>
+        <% if s.status %>
+            <span class="label label-success">Online</span>
+        <% else %>
+            <span class="label label-danger">Offline</span>
+        <% end %>
+      </td>
       <td>
         <%= link_to raw('<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>'), "/servers/#{@server.id}/remove_satellite/#{s.id}", method: :delete, data: { confirm: 'Are you sure?'} %>
       </td>

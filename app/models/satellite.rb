@@ -19,4 +19,13 @@ class Satellite < ActiveRecord::Base
                      too_long: "Please choose a name that is only %{count} word."
                  }
   has_and_belongs_to_many :servers
+
+  def self.alive_count
+    alive_all.count
+  end
+
+  def self.alive_all
+    where(status: true)
+  end
+
 end

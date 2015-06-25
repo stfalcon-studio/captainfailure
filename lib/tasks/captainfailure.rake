@@ -71,20 +71,18 @@ namespace :captainfailure do
         check_result = CheckResult.new
         check_result.server = server
         check_result.check = check
-        check_result.total_satellites = server.satellites.count
+        check_result.total_satellites = server.satellites.alive_count
         check_result.ready_satellites = 0
         check_result.save
-        server.satellites.all.each do |satellite|
-          if satellite.status
-            msg = check.serializable_hash
-            if msg['check_via'] == 'ip'
-              msg['ip'] = server.ip_address
-            else
-              msg['domain'] = server.dns_name
-            end
-            msg['check_result_id'] = check_result.id
-            rabbit.publish(msg.to_json, :routing_key => satellite.name)
+        server.satellites.alive_all.each do |satellite|
+          msg = check.serializable_hash
+          if msg['check_via'] == 'ip'
+            msg['ip'] = server.ip_address
+          else
+            msg['domain'] = server.dns_name
           end
+          msg['check_result_id'] = check_result.id
+          rabbit.publish(msg.to_json, :routing_key => satellite.name)
         end
         check.updated_at = Time.now.utc
         check.save
