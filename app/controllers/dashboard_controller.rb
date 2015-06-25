@@ -14,6 +14,7 @@
 
 class DashboardController < ApplicationController
   def index
+    @activity = CheckResult.paginate(:page => params[:page], :per_page => 30).order('id DESC')
     render 'index'
   end
 end

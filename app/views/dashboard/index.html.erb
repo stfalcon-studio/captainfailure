@@ -1,7 +1,26 @@
 <div class="container navless-container">
-  <div class="jumbotron">
-    <h1>Dashboard page</h1>
-    <p>There will be useful information</p>
-  </div>
-</div>
+  <% @activity.each do |a| %>
+      <% if a.server and a.check %>
+          <% if a.passed %>
+              <p>
+                <span class="label label-success">Passed</span>
+              </p>
+          <% elsif a.passed == false %>
+              <p>
+                <span class="label label-danger">Failed</span>
+              </p>
+          <% elsif a.passed == nil %>
+              <p>
+                <span class="label label-default">In progress</span>
+              </p>
+          <% end %>
+          <p><%= raw("Send <strong>#{a.check.icmp_count}</strong> ICMP packet on #{link_to a.server.dns_name, server_path(a.server)}") if a.check.check_type == 'icmp' %></p>
+          <p><%= raw("Check if <strong>#{a.check.tcp_port}</strong> port open on #{link_to a.server.dns_name, server_path(a.server)}") if a.check.check_type == 'port_open' %></p>
+          <p><%= raw("Check <a target=\"_blank\" href=\"#{a.check.http_protocol}://#{a.check.http_vhost}#{a.check.http_uri}\">#{a.check.http_protocol}://#{a.check.http_vhost}#{a.check.http_uri}</a> for <strong>#{a.check.http_code}</strong> HTTP code on #{link_to a.server.dns_name, server_path(a.server)}") if a.check.check_type == 'http_code' %></p>
+          <p><%= raw("Check <a target=\"_blank\" href=\"#{a.check.http_protocol}://#{a.check.http_vhost}#{a.check.http_uri}\">#{a.check.http_protocol}://#{a.check.http_vhost}#{a.check.http_uri}</a> for <strong>#{a.check.http_code}</strong> HTTP code and keyword <strong>#{a.check.http_keyword}</strong> on #{link_to a.server.dns_name, server_path(a.server)}") if a.check.check_type == 'http_keyword' %></p>
+          <p><span class="label label-default"><%= a.updated_at %></span></p>
+          <hr>
+      <% end %>
+  <% end %>
+  <%= will_paginate @activity, renderer: BootstrapPagination::Rails %>
 </div>
