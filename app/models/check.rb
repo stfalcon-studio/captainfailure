@@ -41,6 +41,15 @@ class Check < ActiveRecord::Base
 
   end
 
+  def availability
+    if check_results.where.not(passed: nil).count > 0
+      availability = check_results.where(passed: true).count.to_f / check_results.where.not(passed: nil).count * 100
+      eval(sprintf('%8.3f', availability))
+    else
+      0
+    end
+  end
+
   private
 
   def raise_save_error(check, text)

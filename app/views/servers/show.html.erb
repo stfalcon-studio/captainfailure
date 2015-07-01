@@ -57,7 +57,8 @@
     <tr>
       <th></th>
       <th></th>
-      <th></th>
+      <th>Availability</th>
+      <th>State</th>
       <th></th>
     </tr>
     </thead>
@@ -77,6 +78,7 @@
             <%= raw("Check <a target=\"_blank\" href=\"#{n.http_protocol}://#{n.http_vhost}#{n.http_uri}\">#{n.http_protocol}://#{n.http_vhost}#{n.http_uri}</a> for <strong>#{n.http_code}</strong> HTTP code on <strong>#{via}</strong>") if n.check_type == 'http_code' %>
             <%= raw("Check <a target=\"_blank\" href=\"#{n.http_protocol}://#{n.http_vhost}#{n.http_uri}\">#{n.http_protocol}://#{n.http_vhost}#{n.http_uri}</a> for <strong>#{n.http_code}</strong> HTTP code and keyword <strong>#{n.http_keyword}</strong> on <strong>#{via}</strong>") if n.check_type == 'http_keyword' %>
           </td>
+          <td><%= "#{n.availability}%" %></td>
           <td>
             <%= link_to raw('<span class="label label-success">Enabled</span>'), "/servers/#{@server.id}/checks/#{n.id}/disable_check", method: :post if n.enabled == 'yes' %>
             <%= link_to raw('<span class="label label-danger">Disabled</span>'), "/servers/#{@server.id}/checks/#{n.id}/enable_check", method: :post if n.enabled == 'no' %>
