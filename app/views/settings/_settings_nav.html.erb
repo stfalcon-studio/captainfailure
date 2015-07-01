@@ -2,5 +2,6 @@
   <li role="presentation"<%= raw('class="active"') if @container_active == 'general' %>><%= link_to 'General', :general_settings %></li>
   <li role="presentation"<%= raw('class="active"') if @container_active == 'rabbitmq' %>><%= link_to 'RabbitMQ', :rabbitmq_settings %></li>
   <li role="presentation"<%= raw('class="active"') if @container_active == 'turbosms' %>><%= link_to 'TurboSMS', :turbosms_settings %></li>
+  <li role="presentation"<%= raw('class="active"') if @container_active == 'slack' %>><%= link_to 'Slack', :slack_settings %></li>
 </ul>
 <br>

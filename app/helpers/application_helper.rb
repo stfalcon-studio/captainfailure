@@ -20,6 +20,8 @@ module ApplicationHelper
             AlertMailer.send_alert(notification.value, @check_result.check.check_type, @server.dns_name, text).deliver_now
           elsif notification.notification_type == 'sms'
             send_sms(notification.value, text)
+          elsif notification.notification_type == 'slack'
+            send_slack(notification.value, text)
           end
         end
       end
@@ -39,6 +41,13 @@ module ApplicationHelper
         sms_text = text
       end
       TurboSMS.send_sms(number, sms_text)
+    end
+
+    def send_slack(channel, text)
+      require 'slack-notifier'
+      setting = Setting.where(name: 'slack').first
+      notifier = Slack::Notifier.new(setting.webhook_url, channel: channel, username: 'captainfailure')
+      notifier.ping text
     end
 
     def notification_fail_count(server_id, notification_id)

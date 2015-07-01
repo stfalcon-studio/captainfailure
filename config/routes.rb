@@ -30,5 +30,7 @@ Rails.application.routes.draw do
     patch '/turbosms',   to: 'settings#turbosms_update'
     get   '/general',   to: 'settings#general'
     patch '/general',   to: 'settings#general_update'
+    get   '/slack',   to: 'settings#slack'
+    patch '/slack',   to: 'settings#slack_update'
   end
 end

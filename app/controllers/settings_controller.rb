@@ -4,7 +4,8 @@ class SettingsController < ApplicationController
   before_action :set_active
   before_action :find_rabbitmq, only: [:rabbitmq, :rabbitmq_update]
   before_action :find_turbosms, only: [:turbosms, :turbosms_update]
-  before_action :find_general, only:  [:general, :general_update]
+  before_action :find_general,  only: [:general, :general_update]
+  before_action :find_slack,    only: [:slack, :slack_update]
 
   def index
     redirect_to action: general
@@ -58,6 +59,22 @@ class SettingsController < ApplicationController
     end
   end
 
+  def slack
+    @container_active = 'slack'
+  end
+
+  def slack_update
+    param = params.require(:setting).permit(:webhook_url)
+    @setting.update_attributes(param)
+    if @setting.errors.empty?
+      flash[:notice] = 'Successfully saved.'
+      redirect_to action: slack
+    else
+      flash.now[:alert] = 'You made mistakes in your form. Please correct them.'
+      render 'slack'
+    end
+  end
+
   private
 
   def check_permission
@@ -85,4 +102,8 @@ class SettingsController < ApplicationController
     render text: 'Not found', status: 404 unless @setting
   end
 
+  def find_slack
+    @setting = Setting.where(name: 'slack').first
+    render text: 'Not found', status: 404 unless @setting
+  end
 end

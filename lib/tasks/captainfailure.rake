@@ -37,6 +37,7 @@ namespace :captainfailure do
     Setting.create(name: 'rabbitmq', value: { host: 'localhost', port: 5672, web_api_port: 15672, user: 'guest', password: 'guest' } )
     Setting.create(name: 'turbosms', value: { user: '', password: '', name_in_sms: '' } )
     Setting.create(name: 'general', value: { reports_days_to_store: '30' } )
+    Setting.create(name: 'slack', value: { webhook_url: '' } )
     STDOUT.puts 'Done!'.green
   end
 

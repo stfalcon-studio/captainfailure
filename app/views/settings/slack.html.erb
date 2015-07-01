@@ -1,0 +1,9 @@
+<div class="container navless-container">
+  <%= render partial: 'settings/settings_nav' %>
+  <div class="col-md-4">
+    <%= simple_form_for @setting, url: '/settings/slack' do |f| %>
+        <%= f.input :webhook_url %>
+        <%= f.button :submit, value: 'Save' %>
+    <% end %>
+  </div>
+</div>
