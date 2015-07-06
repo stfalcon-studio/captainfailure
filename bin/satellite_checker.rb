@@ -100,7 +100,7 @@ class SatelliteChecker
   end
 end
 
-opts = {host: '54.229.102.49', username: 'captainfailure', password: 'LNRtFp3ekoIc3nTuzaZ1'}
+opts = {host: '127.0.0.1', username: 'captainfailure', password: 'qwerty'}
 satellite_name = 'aws-ierland'
 conn = Bunny.new(opts)
 conn.start
