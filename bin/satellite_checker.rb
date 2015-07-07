@@ -96,6 +96,7 @@ class SatelliteChecker
       ch = conn.create_channel
       q  = ch.queue('captainfailure_reports')
       q.publish(report.to_json, :persistent => true)
+      conn.close
     end
   end
 end
