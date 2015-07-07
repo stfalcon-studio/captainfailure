@@ -114,7 +114,7 @@ namespace :captainfailure do
         server = Server.where(id: check_result.server_id).first
         success_count = 0
         check_result.satellites_data.each { |result| success_count += 1 if result[:result] }
-        if server.alert_on == 0
+        if server.alert_on.to_i == 0
           if success_count != 0
             check_result.passed = true
             check_result.save
@@ -160,7 +160,7 @@ namespace :captainfailure do
     check_results = CheckResult.where('updated_at <= ?', 2.minutes.ago)
     check_results = check_results.where(passed: nil)
     check_results.each do |check_result|
-      if check_result.server.alert_on == 0
+      if check_result.server.alert_on.to_i == 0
         check_result.passed = false
         check_result.save
         check_result.check.fail_count += 1
