@@ -1,4 +1,10 @@
 <div class="container navless-container">
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" <%= 'class=active' if @active == 'all' %>><a href="/">All</a></li>
+    <li role="presentation" <%= 'class=active' if @active == 'failed' %>><a href="/failed">Failed</a></li>
+    <li role="presentation" <%= 'class=active' if @active == 'passed' %>><a href="/passed">Passed</a></li>
+  </ul>
+  <br>
   <% @activity.each do |a| %>
       <% if a.server and a.check %>
           <% if a.passed %>

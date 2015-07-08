@@ -2,6 +2,8 @@ Rails.application.routes.draw do
   devise_for :users, controllers: { registrations: "users/registrations" }
 
   root 'dashboard#index'
+  get 'failed' => 'dashboard#failed'
+  get 'passed' => 'dashboard#passed'
 
   resources :manageusers, path: '/users/manage', as: :user
 

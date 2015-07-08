@@ -15,6 +15,22 @@
 class DashboardController < ApplicationController
   def index
     @activity = CheckResult.paginate(:page => params[:page], :per_page => 30).order('id DESC')
+    @active = 'all'
     render 'index'
   end
+
+  def failed
+    @activity = CheckResult.where(passed: false)
+    @activity = @activity.paginate(:page => params[:page], :per_page => 30).order('id DESC')
+    @active = 'failed'
+    render 'index'
+  end
+
+  def passed
+    @activity = CheckResult.where(passed: true)
+    @activity = @activity.paginate(:page => params[:page], :per_page => 30).order('id DESC')
+    @active = 'passed'
+    render 'index'
+  end
+
 end
