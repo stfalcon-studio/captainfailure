@@ -160,7 +160,7 @@ namespace :captainfailure do
     check_results = CheckResult.where('updated_at <= ?', 2.minutes.ago)
     check_results = check_results.where(passed: nil)
     check_results.each do |check_result|
-      if check_result.server.alert_on.to_i == 0
+      if check_result.server.alert_on.to_i == 1
         check_result.passed = false
         check_result.save
         check_result.check.fail_count += 1
