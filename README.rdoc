@@ -1,3 +1,5 @@
 == README
 
-Sometime it will be cool monitoring system. Which allows you to check your sites from different places via satellites that receive tasks from RabbitMQ or Amazon SQS (I don't decided yet). But for now it's in early development state.
+It's distributed monitoring system. That allow perform active check (icmp, port open, http by code and keyword) from several "satellites" for be sure that your services works from different places or for avoid notifications due to local network issues. Satellites and core use RabbitMQ for exchange tasks and check results. It's support several method of notification: email, sms and Slack.
+
+Installation: https://github.com/stfalcon-studio/captainfailure/wiki/Installation

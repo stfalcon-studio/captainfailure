@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150623150257) do
+ActiveRecord::Schema.define(version: 20150714082101) do
 
   create_table "check_results", force: :cascade do |t|
     t.integer  "server_id"
@@ -42,6 +42,7 @@ ActiveRecord::Schema.define(version: 20150623150257) do
     t.boolean  "enabled",        default: true
     t.integer  "check_interval", default: 5
     t.integer  "fail_count",     default: 0
+    t.integer  "timeout",        default: 30
   end
 
   create_table "notifications", force: :cascade do |t|

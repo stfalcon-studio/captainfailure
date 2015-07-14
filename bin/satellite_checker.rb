@@ -14,9 +14,9 @@ class SatelliteChecker
       system("ping -c #{icmp_count} #{ip}")
     end
 
-    def port_check(ip, port)
+    def port_check(ip, port, timeout)
       begin
-        Timeout::timeout(5) do
+        Timeout::timeout(timeout) do
           begin
             s = TCPSocket.new(ip, port)
             s.close
@@ -26,37 +26,49 @@ class SatelliteChecker
           end
         end
       rescue Timeout::Error
+        return false
       end
-
       return false
     end
 
-    def http_code_check(uri, code_expected)
+    def http_code_check(uri, code_expected, timeout)
       require 'httpclient'
       client = HTTPClient.new
       begin
-        result = client.get(uri)
-      rescue
-        return false
-      end
-      if result.code == code_expected
-        return true
-      else
+        Timeout::timeout(timeout) do
+          begin
+            result = client.get(uri)
+            if result.code == code_expected
+              return true
+            else
+              return false
+            end
+          rescue
+            return false
+          end
+        end
+      rescue Timeout::Error
         return false
       end
     end
 
-    def http_keyword_check(uri, code_expected, keyword)
+    def http_keyword_check(uri, code_expected, keyword, timeout)
       require 'httpclient'
       client = HTTPClient.new
       begin
-        result = client.get(uri)
-      rescue
-        return false
-      end
-      if (result.code == code_expected) and (result.content.include?(keyword))
-        return true
-      else
+        Timeout::timeout(timeout) do
+          begin
+            result = client.get(uri)
+            if (result.code == code_expected) and (result.content.include?(keyword))
+              return true
+            else
+              return false
+            end
+          rescue
+            return false
+          end
+        end
+      rescue Timeout::Error
         return false
       end
     end
@@ -73,13 +85,13 @@ class SatelliteChecker
         if check['check_type'] == 'icmp'
           result = SatelliteChecker.icmp_check(check['ip'], check['icmp_count'])
         elsif check['check_type'] == 'port_open'
-          result = SatelliteChecker.port_check(check['ip'], check['tcp_port'])
+          result = SatelliteChecker.port_check(check['ip'], check['tcp_port'], check['timeout'])
         elsif check['check_type'] == 'http_code'
           uri = "#{check['http_protocol']}://#{check['http_vhost']}:#{check['tcp_port']}#{check['http_uri']}"
-          result = SatelliteChecker.http_code_check(uri, check['http_code'])
+          result = SatelliteChecker.http_code_check(uri, check['http_code'], check['timeout'])
         elsif check['check_type'] == 'http_keyword'
           uri = "#{check['http_protocol']}://#{check['http_vhost']}:#{check['tcp_port']}#{check['http_uri']}"
-          result = SatelliteChecker.http_keyword_check(uri, check['http_code'], check['http_keyword'])
+          result = SatelliteChecker.http_keyword_check(uri, check['http_code'], check['http_keyword'], check['timeout'])
         end
         report = {}
         report[:result] = result

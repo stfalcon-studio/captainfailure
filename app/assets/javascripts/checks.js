@@ -12,6 +12,7 @@ $(function() {
         $('#http_protocol').hide();
         $('#http_keyword').hide();
         $('#check_interval').hide();
+        $('#timeout').hide();
         $('#form_submit').hide();
     }
     if($('#check_check_type').val() == 'icmp') {
@@ -28,6 +29,7 @@ $(function() {
         $('#enabled').show();
         $('#tcp_port').show();
         $('#check_interval').show();
+        $('#timeout').show();
         $('#form_submit').show();
     }
     if($('#check_check_type').val() == 'http_code') {
@@ -40,6 +42,7 @@ $(function() {
         $('#http_uri').show();
         $('#http_protocol').show();
         $('#check_interval').show();
+        $('#timeout').show();
         $('#form_submit').show();
     }
     if($('#check_check_type').val() == 'http_keyword') {
@@ -53,6 +56,7 @@ $(function() {
         $('#http_protocol').show();
         $('#check_interval').show();
         $('#http_keyword').show();
+        $('#timeout').show();
         $('#form_submit').show();
     }
     if($('#check_check_type').val() == '') {
@@ -73,6 +77,7 @@ $(function() {
             $('#enabled').show();
             $('#tcp_port').show();
             $('#check_interval').show();
+            $('#timeout').show();
             $('#form_submit').show();
         }
         if($('#check_check_type').val() == 'http_code') {
@@ -85,6 +90,7 @@ $(function() {
             $('#http_uri').show();
             $('#http_protocol').show();
             $('#check_interval').show();
+            $('#timeout').show();
             $('#form_submit').show();
         }
         if($('#check_check_type').val() == 'http_keyword') {
@@ -98,6 +104,7 @@ $(function() {
             $('#http_protocol').show();
             $('#check_interval').show();
             $('#http_keyword').show();
+            $('#timeout').show();
             $('#form_submit').show();
         }
         if($('#check_check_type').val() == '') {
