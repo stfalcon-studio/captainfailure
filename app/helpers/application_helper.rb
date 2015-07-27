@@ -16,12 +16,14 @@ module ApplicationHelper
       @server.notifications.each do |notification|
         notification_fail_count = notification_fail_count(@server.id, notification.id)
         if @check_result.check.fail_count >= notification_fail_count
-          if notification.notification_type == 'email'
-            AlertMailer.send_alert(notification.value, @check_result.check.check_type, @server.dns_name, text).deliver_now
-          elsif notification.notification_type == 'sms'
-            send_sms(notification.value, text)
-          elsif notification.notification_type == 'slack'
-            send_slack(notification.value, text)
+          if notification.active?
+            if notification.notification_type == 'email'
+              AlertMailer.send_alert(notification.value, @check_result.check.check_type, @server.dns_name, text).deliver_now
+            elsif notification.notification_type == 'sms'
+              send_sms(notification.value, text)
+            elsif notification.notification_type == 'slack'
+              send_slack(notification.value, text)
+            end
           end
         end
       end

@@ -8,6 +8,7 @@
     <tr>
       <th>Type</th>
       <th>Value</th>
+      <th>Schedule</th>
       <th></th>
     </tr>
     </thead>
@@ -21,6 +22,20 @@
             <%= notification.notification_type %>
           </td>
           <td><%= notification.value %></td>
+          <td>
+            <% if notification.active? %>
+                <p class="text-success">
+            <% else %>
+               <p class="text-danger">
+            <% end %>
+            <%= link_to raw('<span class="glyphicon glyphicon-dashboard" aria-hidden="true"></span>'),  "/notifications/#{notification.id}/notifications_schedules"%>
+            <% if notification.active? %>
+                Active
+            <% else %>
+                Passive
+            <% end %>
+            </p>
+          </td>
           <td>
             <%= link_to raw('<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>'), notification_path(notification), method: :delete, data: { confirm: 'Are you sure?'} %>
           </td>

@@ -23,7 +23,9 @@ Rails.application.routes.draw do
   end
 
   resources  :satellites
-  resources  :notifications
+  resources  :notifications do
+    resources :notifications_schedules
+  end
   resource  :settings, only: [:index] do
     get   '/',         to: 'settings#index'
     get   '/rabbitmq', to: 'settings#rabbitmq'

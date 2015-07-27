@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150714082101) do
+ActiveRecord::Schema.define(version: 20150724131918) do
 
   create_table "check_results", force: :cascade do |t|
     t.integer  "server_id"
@@ -50,6 +50,17 @@ ActiveRecord::Schema.define(version: 20150714082101) do
     t.string   "value"
     t.datetime "created_at",        null: false
     t.datetime "updated_at",        null: false
+  end
+
+  create_table "notifications_schedules", force: :cascade do |t|
+    t.integer  "notification_id"
+    t.string   "m"
+    t.string   "h"
+    t.string   "dom"
+    t.string   "mon"
+    t.string   "dow"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
   end
 
   create_table "satellites", force: :cascade do |t|

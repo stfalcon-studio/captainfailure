@@ -26,6 +26,7 @@ class Check < ActiveRecord::Base
   belongs_to :server
   has_many :check_results
 
+
   before_save do |check|
     unless check.check_type == 'icmp'
       raise_save_error(check, 'TCP port required.') if check.tcp_port == nil

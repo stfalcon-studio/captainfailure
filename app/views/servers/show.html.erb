@@ -98,6 +98,7 @@
     <tr>
       <th>Type</th>
       <th>Value</th>
+      <th>Schedule<th>
       <th>Fails to notify</th>
       <th></th>
     </tr>
@@ -107,6 +108,20 @@
         <tr>
           <td><%= n.notification_type %></td>
           <td><%= n.value %></td>
+          <td>
+            <% if n.active? %>
+                <p class="text-success">
+            <% else %>
+                <p class="text-danger">
+            <% end %>
+            <%= link_to raw('<span class="glyphicon glyphicon-dashboard" aria-hidden="true"></span>'),  "/notifications/#{n.id}/notifications_schedules"%>
+            <% if n.active? %>
+                Active
+            <% else %>
+                Passive
+            <% end %>
+            </p>
+          </td>
           <td><%= link_to raw('<span class="glyphicon glyphicon-minus" aria-hidden="true"></span>'), "/servers/#{@server.id}/notification_fail_count_down/#{n.id}", method: :post %> <%= notification_fail_count(@server.id, n.id) %> <%= link_to raw('<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>'), "/servers/#{@server.id}/notification_fail_count_up/#{n.id}", method: :post %></td>
           <td>
             <%= link_to raw('<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>'), "/servers/#{@server.id}/remove_notification/#{n.id}", method: :delete, data: { confirm: 'Are you sure?'} %>

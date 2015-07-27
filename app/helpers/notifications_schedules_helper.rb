@@ -1,0 +1,2 @@
+module NotificationsSchedulesHelper
+end
