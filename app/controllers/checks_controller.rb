@@ -32,7 +32,7 @@ class ChecksController < ApplicationController
     if @check.errors.empty?
       flash[:notice] = 'New check successfully added.'
       @server.checks << @check
-      redirect_to server_path(@server)
+      redirect_to "#{server_path(@server)}#checks"
     else
       @check.errors.messages.each { |msg| flash.now[:alert] = msg[1][0] }
       render 'edit'
@@ -43,7 +43,7 @@ class ChecksController < ApplicationController
     @check.update_attributes(check_params)
     if @check.errors.empty?
       flash[:notice] = 'Check successfully updated.'
-      redirect_to server_path(@server)
+      redirect_to "#{server_path(@server)}#checks"
     else
       @check.errors.messages.each { |msg| flash.now[:alert] = msg[1][0] }
       render 'edit'
@@ -52,7 +52,7 @@ class ChecksController < ApplicationController
 
   def destroy
     @check.destroy
-    redirect_to server_path(@server)
+    redirect_to "#{server_path(@server)}#checks"
   end
 
   def disable_check
@@ -60,7 +60,7 @@ class ChecksController < ApplicationController
     render text: 'Not found', status: 404 unless @check
     @check.enabled = 'no'
     @check.save
-    redirect_to server_path(@server)
+    redirect_to "#{server_path(@server)}#checks"
   end
 
   def enable_check
@@ -68,7 +68,7 @@ class ChecksController < ApplicationController
     render text: 'Not found', status: 404 unless @check
     @check.enabled = 'yes'
     @check.save
-    redirect_to server_path(@server)
+    redirect_to "#{server_path(@server)}#checks"
   end
 
   private

@@ -10,7 +10,7 @@
     </div>
   </div>
   <hr>
-  <h3>Satellites</h3>
+  <h3 id="satellites">Satellites</h3>
   <table class="table table-striped">
     <thead>
     <tr>
@@ -51,7 +51,7 @@
       <%= link_to 'Add all', "/servers/#{@server.id}/add_all_satellites", method: :post, class: 'btn btn-primary' %>
   <% end %>
   <hr>
-  <h3>Checks</h3>
+  <h3 id="checks">Checks</h3>
   <table class="table table-striped">
     <thead>
     <tr>
@@ -92,7 +92,7 @@
   </table>
   <%= link_to 'Add', "/servers/#{@server.id}/checks/new", class: 'btn btn-success' %>
   <hr>
-  <h3>Notifications</h3>
+  <h3 id="notifications">Notifications</h3>
   <table class="table table-striped">
     <thead>
     <tr>
