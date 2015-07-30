@@ -1,8 +1,19 @@
 <div class="container navless-container">
-  <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" <%= 'class=active' if @active == 'all' %>><a href="/">All</a></li>
-    <li role="presentation" <%= 'class=active' if @active == 'failed' %>><a href="/failed">Failed</a></li>
-    <li role="presentation" <%= 'class=active' if @active == 'passed' %>><a href="/passed">Passed</a></li>
+  <ul class="nav nav-pills" role="tablist">
+    <li role="presentation" class="dropdown">
+      <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+        Server: <%= @selected_server %> <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu">
+        <li><a href="/">all</a></li>
+        <% @servers.each do |server| %>
+            <li><%= link_to server.dns_name, server: server.dns_name %></a></li>
+        <% end %>
+      </ul>
+    </li>
+    <li role="presentation" <%= 'class=active' if @active == 'all' %>><%= link_to 'All', controller: :dashboard, action: :index, server: @selected_server%></li>
+    <li role="presentation" <%= 'class=active' if @active == 'failed' %>><%= link_to 'Failed', controller: :dashboard, action: :failed, server: @selected_server%></li>
+    <li role="presentation" <%= 'class=active' if @active == 'passed' %>><%= link_to 'Passed', controller: :dashboard, action: :passed, server: @selected_server%></li>
   </ul>
   <br>
   <% @activity.each do |a| %>
