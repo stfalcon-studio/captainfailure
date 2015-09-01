@@ -26,6 +26,12 @@ class DashboardController < ApplicationController
     render 'index'
   end
 
+  def check_details
+    check_result = CheckResult.where('id = ?', params['check_id']).first
+    render_404 unless check_result
+    render json: check_result.satellites_data if check_result
+  end
+
   def failed
     @activity = CheckResult.where(passed: false)
     unless @selected_server == 'all'
@@ -56,7 +62,7 @@ class DashboardController < ApplicationController
   def select_server
     if params[:server]
       @selected_server = params[:server]
-      render text: 'Not found', status: 404 unless server_names.include?(@selected_server) or @selected_server == 'all'
+      render_404 unless server_names.include?(@selected_server) or @selected_server == 'all'
     else
       @selected_server = 'all'
     end
