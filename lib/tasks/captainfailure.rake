@@ -153,6 +153,7 @@ namespace :captainfailure do
     setting = Setting.where(name: 'general').first
     store_days = setting.reports_days_to_store.to_i
     CheckResult.where('updated_at <= ?', store_days.day.ago).each { |check_result| check_result.delete }
+    AvailabilityStat.where('updated_at <= ?', store_days.day.ago).each { |availability_stat| availability_stat.delete }
   end
 
   desc 'Finish old checks without satellite reply'
@@ -182,6 +183,16 @@ namespace :captainfailure do
           ApplicationHelper::AlertSender.new(check_result.server, check_result)
         end
       end
+    end
+  end
+
+  desc 'Add availability stats for charts'
+  task availability_stats: :environment do
+    date_yesterday = Date.today - 1
+    day_for = date_yesterday.day.to_s + '/' + date_yesterday.month.to_s
+    Check.all.each do |check|
+      availability_yesterday = check.availability_yesterday
+      check.availability_stats.create(percent: availability_yesterday, day_for: day_for)
     end
   end
 

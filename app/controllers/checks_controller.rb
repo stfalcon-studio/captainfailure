@@ -20,6 +20,16 @@ class ChecksController < ApplicationController
   def index
   end
 
+  def availability
+    @check = Check.where(id: params[:check_id]).first
+    render_404 unless @check
+    availability_data = []
+    @check.availability_stats.all.each do |availability_stat|
+      availability_data << [availability_stat.day_for, availability_stat.percent]
+    end
+    render json: availability_data
+  end
+
   def new
     @check = Check.new
   end

@@ -19,7 +19,8 @@ Rails.application.routes.draw do
     post   'notification_fail_count_down/:id' => 'servers#notification_fail_count_down'
     resources :checks do
       post '/disable_check' => 'checks#disable_check'
-      post '/enable_check' => 'checks#enable_check'
+      post '/enable_check'  => 'checks#enable_check'
+      get  '/availability'  => 'checks#availability'
     end
   end
 

@@ -25,6 +25,7 @@ class Check < ActiveRecord::Base
 
   belongs_to :server
   has_many :check_results
+  has_many :availability_stats
 
 
   before_save do |check|
@@ -47,6 +48,16 @@ class Check < ActiveRecord::Base
   def availability
     if check_results.where.not(passed: nil).count > 0
       availability = check_results.where(passed: true).count.to_f / check_results.where.not(passed: nil).count * 100
+      eval(sprintf('%8.3f', availability))
+    else
+      0
+    end
+  end
+
+  def availability_yesterday
+    availability_data = check_results.where("DATE(created_at) = ?", Date.today-1)
+    if availability_data.count > 0
+      availability = availability_data.where(passed: true).count.to_f / availability_data.where.not(passed: nil).count * 100
       eval(sprintf('%8.3f', availability))
     else
       0

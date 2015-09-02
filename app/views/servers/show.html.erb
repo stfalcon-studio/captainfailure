@@ -78,7 +78,7 @@
             <%= raw("Check <a target=\"_blank\" href=\"#{n.http_protocol}://#{n.http_vhost}#{n.http_uri}\">#{n.http_protocol}://#{n.http_vhost}#{n.http_uri}</a> for <strong>#{n.http_code}</strong> HTTP code on <strong>#{via}</strong>") if n.check_type == 'http_code' %>
             <%= raw("Check <a target=\"_blank\" href=\"#{n.http_protocol}://#{n.http_vhost}#{n.http_uri}\">#{n.http_protocol}://#{n.http_vhost}#{n.http_uri}</a> for <strong>#{n.http_code}</strong> HTTP code and keyword <strong>#{n.http_keyword}</strong> on <strong>#{via}</strong>") if n.check_type == 'http_keyword' %>
           </td>
-          <td><%= "#{n.availability}%" %></td>
+          <td><a href="javascript:void(0)" data-toggle="modal" data-target="#myModal" onclick="get_la_data(<%= @server.id %>, <%= n.id %>); return false;"><%= "#{n.availability}%" %></a></td>
           <td>
             <%= link_to raw('<span class="label label-success">Enabled</span>'), "/servers/#{@server.id}/checks/#{n.id}/disable_check", method: :post if n.enabled == 'yes' %>
             <%= link_to raw('<span class="label label-danger">Disabled</span>'), "/servers/#{@server.id}/checks/#{n.id}/enable_check", method: :post if n.enabled == 'no' %>
@@ -142,3 +142,59 @@
       <%= link_to 'Add all', "/servers/#{@server.id}/add_all_notifications", method: :post, class: 'btn btn-primary' %>
   <% end %>
 </div>
+
+<div class="container">
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Availability chart</h4>
+        </div>
+        <div class="modal-body">
+          <div id="chart_div"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script>
+    google.load('visualization', '1', {packages: ['corechart', 'line']});
+    //google.setOnLoadCallback(drawBasic);
+
+    function get_la_data(server_id, check_id) {
+        $.getJSON('/servers/' + server_id + '/checks/' + check_id + '/availability', function(data) {
+            drawBasic(data);
+        });
+    }
+
+    function drawBasic(availability_data) {
+
+        var data = new google.visualization.DataTable();
+
+        data.addColumn('string', 'X');
+        data.addColumn('number', 'SA');
+
+        data.addRows(availability_data);
+
+        var options = {
+            hAxis: {
+                title: 'Date'
+            },
+            vAxis: {
+                title: '%'
+            },
+            'width':500,
+            'height':200
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+
+        chart.draw(data, options);
+    }
+</script>
