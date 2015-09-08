@@ -21,7 +21,7 @@
             </a>
             <%= notification.notification_type %>
           </td>
-          <td><%= notification.value %></td>
+          <td><%= link_to notification.value, notification_path(notification.id) %></td>
           <td>
             <% if notification.active? %>
                 <p class="text-success">

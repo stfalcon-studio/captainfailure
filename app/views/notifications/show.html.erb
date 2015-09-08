@@ -1,0 +1,34 @@
+<div class="container navless-container">
+  <h3><%= @notification.value %> added on:</h3>
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>Name</th>
+      <th>Comment</th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @notification.servers.each do |server|%>
+      <tr>
+        <td><%= link_to server.dns_name, server_path(server) %></td>
+        <td><%= server.comment %></td>
+        <td>
+          <%= link_to raw('<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>'), "/notifications/#{@notification.id}/remove_server/#{server.id}", method: :delete, data: { confirm: 'Are you sure?'} %>
+        </td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+  <% unless @notification.servers.count == @servers.count %>
+      <div class="btn-group dropdown">
+        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Add <span class="caret"></span></button>
+        <ul class="dropdown-menu" role="menu">
+          <% @servers.each do |server| %>
+              <%= raw "<li>#{link_to server.dns_name, "/notifications/#{@notification.id}/add_server/#{server.id}", method: :post}</li>" unless @notification.servers.include?(server)%>
+          <% end %>
+        </ul>
+      </div>
+      <%= link_to 'Add all', "/notifications/#{@notification.id}/add_all_servers", method: :post, class: 'btn btn-primary' %>
+  <% end %>
+</div>

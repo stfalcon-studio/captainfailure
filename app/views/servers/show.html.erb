@@ -107,7 +107,7 @@
     <% @server.notifications.each do |n| %>
         <tr>
           <td><%= n.notification_type %></td>
-          <td><%= n.value %></td>
+          <td><%= link_to n.value, notification_path(n) %></td>
           <td>
             <% if n.active? %>
                 <p class="text-success">

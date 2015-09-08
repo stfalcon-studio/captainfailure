@@ -26,6 +26,9 @@ Rails.application.routes.draw do
 
   resources  :satellites
   resources  :notifications do
+    post   'add_server/:id'    => 'notifications#add_server'
+    post   'add_all_servers'   => 'notifications#add_all_servers'
+    delete 'remove_server/:id' => 'notifications#remove_server'
     resources :notifications_schedules
   end
   resource  :settings, only: [:index] do

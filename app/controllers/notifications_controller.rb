@@ -15,10 +15,15 @@
 class NotificationsController < ApplicationController
 
   before_action :set_active
-  before_action :find_notification, only: [:edit, :update, :destroy]
+  before_action :find_notification, only: [:show, :edit, :update, :destroy]
+  before_action :find_notification_for_server, only: [:add_server, :add_all_servers, :remove_server]
 
   def index
     @notifications = Notification.all
+  end
+
+  def show
+    @servers = Server.all
   end
 
   def new
@@ -55,6 +60,22 @@ class NotificationsController < ApplicationController
     redirect_to action: 'index'
   end
 
+  def add_server
+    server = Server.where(id: params[:id]).first
+    render_404 unless server
+    @notification.servers << server
+    redirect_to notification_path(@notification)
+  end
+
+  def add_all_servers
+    @notification.servers << Server.all
+    redirect_to notification_path(@notification)
+  end
+
+  def remove_server
+    ServerNotification.where(server_id: params[:id], notification_id: params[:notification_id]).first.delete
+    redirect_to "#{notification_path(@notification)}#notifications"
+  end
   private
 
   def set_active
@@ -67,6 +88,12 @@ class NotificationsController < ApplicationController
 
   def find_notification
     @notification = Notification.where(id: params[:id]).first
-    render text: 'Not found', status: 404 unless @notification
+    render_404 unless @notification
   end
+
+  def find_notification_for_server
+    @notification = Notification.where(id: params[:notification_id]).first
+    render_404 unless @notification
+  end
+
 end
