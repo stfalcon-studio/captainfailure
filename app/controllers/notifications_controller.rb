@@ -68,7 +68,7 @@ class NotificationsController < ApplicationController
   end
 
   def add_all_servers
-    @notification.servers << Server.all
+    @notification.servers = Server.all
     redirect_to notification_path(@notification)
   end
 
