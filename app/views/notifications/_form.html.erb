@@ -1,2 +1,5 @@
 <%= f.input :notification_type, collection: Notification.notification_types.keys, selected: @notification.notification_type, label: 'Type' %>
 <%= f.input :value %>
+<% if current_user.is_admin %>
+    <%= f.input :user_id, collection: User.all, selected: @selected_user, label: 'Added by' %>
+<% end %>

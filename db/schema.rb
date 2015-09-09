@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150902075105) do
+ActiveRecord::Schema.define(version: 20150909082404) do
 
   create_table "availability_stats", force: :cascade do |t|
     t.integer  "check_id"
@@ -58,6 +58,7 @@ ActiveRecord::Schema.define(version: 20150902075105) do
     t.string   "value"
     t.datetime "created_at",        null: false
     t.datetime "updated_at",        null: false
+    t.integer  "user_id"
   end
 
   create_table "notifications_schedules", force: :cascade do |t|

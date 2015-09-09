@@ -8,6 +8,7 @@
     <tr>
       <th>Type</th>
       <th>Value</th>
+      <th>Added by:</th>
       <th>Schedule</th>
       <th></th>
     </tr>
@@ -22,6 +23,7 @@
             <%= notification.notification_type %>
           </td>
           <td><%= link_to notification.value, notification_path(notification.id) %></td>
+          <td><%= notification.user.name if notification.user %></td>
           <td>
             <% if notification.active? %>
                 <p class="text-success">

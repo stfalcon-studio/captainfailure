@@ -28,13 +28,16 @@ class NotificationsController < ApplicationController
 
   def new
     @notification = Notification.new
+    selected_user
   end
 
   def edit
+    selected_user
   end
 
   def create
     @notification = Notification.create(notification_params)
+    assign_user
     if @notification.errors.empty?
       flash[:notice] = 'New notification successfully added.'
       redirect_to notifications_path
@@ -46,6 +49,7 @@ class NotificationsController < ApplicationController
 
   def update
     @notification.update_attributes(notification_params)
+    assign_user
     if @notification.errors.empty?
       flash[:notice] = 'Notification successfully updated.'
       redirect_to notifications_path
@@ -83,7 +87,11 @@ class NotificationsController < ApplicationController
   end
 
   def notification_params
-    params.require(:notification).permit(:notification_type, :value)
+    if current_user.is_admin
+      params.require(:notification).permit(:notification_type, :value, :user_id)
+    else
+      params.require(:notification).permit(:notification_type, :value)
+    end
   end
 
   def find_notification
@@ -96,4 +104,18 @@ class NotificationsController < ApplicationController
     render_404 unless @notification
   end
 
+  def selected_user
+    if @notification.user_id
+      @selected_user = @notification.user_id
+    else
+      @selected_user = current_user.id
+    end
+  end
+
+  def assign_user
+    unless current_user.is_admin
+      @notification.user = current_user
+      @notification.save
+    end
+  end
 end

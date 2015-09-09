@@ -135,7 +135,8 @@
         <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Add <span class="caret"></span></button>
         <ul class="dropdown-menu" role="menu">
           <% @notifications.each do |notification| %>
-              <%= raw "<li>#{link_to notification.value, "/servers/#{@server.id}/add_notification/#{notification.id}", method: :post}</li>" unless @server.notifications.include?(notification)%>
+              <% added_by = " (#{notification.user.name})" if notification.user %>
+              <%= raw "<li>#{link_to notification.value + added_by.to_s, "/servers/#{@server.id}/add_notification/#{notification.id}", method: :post}</li>" unless @server.notifications.include?(notification)%>
           <% end %>
         </ul>
       </div>

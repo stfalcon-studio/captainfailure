@@ -1,5 +1,5 @@
 <div class="container navless-container">
-  <h3><%= @notification.value %> added on:</h3>
+  <h3><%= @notification.value %> <%= "(#{@notification.user.name}) " if @notification.user %>added on:</h3>
   <table class="table table-striped">
     <thead>
     <tr>
