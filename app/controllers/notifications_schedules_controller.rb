@@ -12,62 +12,33 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class NotificationsSchedulesController < ApplicationController
+class NotificationsSchedulesController < SchedulesController
   before_action :find_notification
-  before_action :find_notifications_schedule, only: [:edit, :update, :destroy]
+  before_action :set_parent_controller
+  before_action :find_schedule, only: [:edit, :update, :destroy]
 
   def index
-
+    @schedule_name = @schedulable_model.value
   end
 
-  def new
-    @notifications_schedule = NotificationsSchedule.new
-  end
-
-  def edit
-
-  end
-
-  def create
-    @notifications_schedule = NotificationsSchedule.create(notifications_schedule_params)
-    if @notifications_schedule.errors.empty?
-      flash[:notice] = 'New schedule successfully added.'
-      @notification.notifications_schedules << @notifications_schedule
-      redirect_to notification_notifications_schedules_path(@notification)
-    else
-      @notifications_schedule.errors.messages.each { |msg| flash.now[:alert] = msg[1][0] }
-      render 'edit'
-    end
-  end
-
-  def update
-    @notifications_schedule.update_attributes(notifications_schedule_params)
-    if @notifications_schedule.errors.empty?
-      flash[:notice] = 'Schedule successfully updated.'
-      redirect_to notification_notifications_schedules_path(@notification)
-    else
-      @notifications_schedule.errors.messages.each { |msg| flash.now[:alert] = msg[1][0] }
-      render 'edit'
-    end
-  end
-
-  def destroy
-    @notifications_schedule.destroy
-    redirect_to notification_notifications_schedules_path(@notification)
+  def schedule_polymorphic_path(object)
+    notification_notifications_schedules_path(object)
   end
 
   private
 
-  def notifications_schedule_params
-    params.require(:notifications_schedule).permit(:m, :h, :dom, :mon, :dow)
-  end
   def find_notification
-    @notification = Notification.where(id: params[:notification_id]).first
-    render text: 'Not found', status: 404 unless @notification
+    @schedulable_model = Notification.where(id: params[:notification_id]).first
+    render_404 unless @schedulable_model
   end
 
-  def find_notifications_schedule
-    @notifications_schedule = NotificationsSchedule.where(id: params[:id]).first
-    render text: 'Not found', status: 404 unless @notifications_schedule
+  def find_schedule
+    @schedule = Schedule.where(id: params[:id]).first
+    render_404 unless @schedule
   end
+
+  def set_parent_controller
+    @parent_controller = 'notifications'
+  end
+
 end

@@ -68,7 +68,7 @@ namespace :captainfailure do
     ch = rabbitmq_connection.create_channel
     rabbit = ch.direct('captainfailure')
     Check.all.each do |check|
-      if (Time.now.utc - check.updated_at > check.check_interval.to_i.minutes) and check.enabled == 'yes'
+      if (Time.now.utc - check.updated_at > check.check_interval.to_i.minutes) and check.enabled == 'yes' and check.active?
         server = Server.where(id: check.server_id).first
         check_result = CheckResult.new
         check_result.server = server

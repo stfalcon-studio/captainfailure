@@ -1,0 +1,10 @@
+<div class="container navless-container">
+  <h3>Edit schedule</h3>
+  <%= render partial: 'help' %>
+  <div class="col-md-6">
+    <%= simple_form_for [@schedulable_model, @schedule], url: "/#{@parent_controller}/#{@schedulable_model.id}/#{params[:controller]}/#{@schedule.id}" do |f| %>
+        <%= render partial: 'form', locals: { f: f } %>
+        <%= f.button :submit, value: 'Save schedule' %>
+    <% end %>
+  </div>
+</div>

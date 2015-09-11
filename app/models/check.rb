@@ -13,6 +13,8 @@
 # limitations under the License.
 
 class Check < ActiveRecord::Base
+  include CheckScheduleState
+
   enum check_type:    { icmp: 0, port_open: 1, http_code: 2, http_keyword: 3 }
   enum check_via:     { ip: 0, domain: 1 }
   enum http_protocol: { http: 0, https: 1 }
@@ -26,6 +28,7 @@ class Check < ActiveRecord::Base
   belongs_to :server
   has_many :check_results
   has_many :availability_stats
+  has_many :schedules, as: :schedulable
 
 
   before_save do |check|

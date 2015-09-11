@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150909082404) do
+ActiveRecord::Schema.define(version: 20150911090921) do
 
   create_table "availability_stats", force: :cascade do |t|
     t.integer  "check_id"
@@ -61,17 +61,6 @@ ActiveRecord::Schema.define(version: 20150909082404) do
     t.integer  "user_id"
   end
 
-  create_table "notifications_schedules", force: :cascade do |t|
-    t.integer  "notification_id"
-    t.string   "m"
-    t.string   "h"
-    t.string   "dom"
-    t.string   "mon"
-    t.string   "dow"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
-  end
-
   create_table "satellites", force: :cascade do |t|
     t.string   "name"
     t.string   "description"
@@ -84,6 +73,21 @@ ActiveRecord::Schema.define(version: 20150909082404) do
     t.integer "satellite_id"
     t.integer "server_id"
   end
+
+  create_table "schedules", force: :cascade do |t|
+    t.integer  "notification_id"
+    t.string   "m"
+    t.string   "h"
+    t.string   "dom"
+    t.string   "mon"
+    t.string   "dow"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+    t.integer  "schedulable_id"
+    t.string   "schedulable_type"
+  end
+
+  add_index "schedules", ["schedulable_id"], name: "index_schedules_on_schedulable_id"
 
   create_table "server_notifications", force: :cascade do |t|
     t.integer  "server_id"

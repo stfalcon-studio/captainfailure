@@ -58,6 +58,7 @@
       <th></th>
       <th></th>
       <th>Availability</th>
+      <th>Schedule</th>
       <th>State</th>
       <th></th>
     </tr>
@@ -79,6 +80,20 @@
             <%= raw("Check <a target=\"_blank\" href=\"#{n.http_protocol}://#{n.http_vhost}#{n.http_uri}\">#{n.http_protocol}://#{n.http_vhost}#{n.http_uri}</a> for <strong>#{n.http_code}</strong> HTTP code and keyword <strong>#{n.http_keyword}</strong> on <strong>#{via}</strong>") if n.check_type == 'http_keyword' %>
           </td>
           <td><a href="javascript:void(0)" data-toggle="modal" data-target="#myModal" onclick="get_la_data(<%= @server.id %>, <%= n.id %>); return false;"><%= "#{n.availability}%" %></a></td>
+          <td>
+            <% if n.active? %>
+                <p class="text-success">
+            <% else %>
+                <p class="text-danger">
+            <% end %>
+            <%= link_to raw('<span class="glyphicon glyphicon-dashboard" aria-hidden="true"></span>'),  "/servers/#{@server.id}/checks/#{n.id}/checks_schedules"%>
+            <% if n.active? %>
+                Active
+            <% else %>
+                Passive
+            <% end %>
+            </p>
+          </td>
           <td>
             <%= link_to raw('<span class="label label-success">Enabled</span>'), "/servers/#{@server.id}/checks/#{n.id}/disable_check", method: :post if n.enabled == 'yes' %>
             <%= link_to raw('<span class="label label-danger">Disabled</span>'), "/servers/#{@server.id}/checks/#{n.id}/enable_check", method: :post if n.enabled == 'no' %>

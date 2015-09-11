@@ -21,6 +21,7 @@ Rails.application.routes.draw do
       post '/disable_check' => 'checks#disable_check'
       post '/enable_check'  => 'checks#enable_check'
       get  '/availability'  => 'checks#availability'
+      resources :checks_schedules
     end
   end
 
