@@ -60,5 +60,6 @@ group :development, :test do
   gem 'capistrano-rails'
   gem 'capistrano-bundler'
   gem 'capistrano-rvm'
+  gem 'ruby-termios'
 end
 
