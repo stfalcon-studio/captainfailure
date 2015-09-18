@@ -20,7 +20,7 @@ set :rvm_ruby_version, '2.2.2'
 # set :format, :pretty
 
 # Default value for :log_level is :debug
-# set :log_level, :debug
+set :log_level, :info
 
 # Default value for :pty is false
 # set :pty, true
