@@ -44,6 +44,7 @@ class SettingsController < ApplicationController
   end
 
   def turbosms
+    @balance = ApplicationHelper::TurboSmsApi.balance
     @container_active = 'turbosms'
   end
 

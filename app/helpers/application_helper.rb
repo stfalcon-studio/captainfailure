@@ -84,4 +84,26 @@ module ApplicationHelper
     end
   end
 
+  class TurboSmsApi
+    def initialize
+      @instance ||= self
+    end
+
+    class << self
+      def balance
+        require 'turbosms'
+        setting = Setting.where(name: 'turbosms').first
+        TurboSMS.default_options[:login]    = setting.user
+        TurboSMS.default_options[:password] = setting.password
+        TurboSMS.default_options[:sender]   = setting.name_in_sms
+        begin
+          TurboSMS.balance.to_i
+        rescue TurboSMS::AuthError
+          0
+        end
+      end
+    end
+
+  end
+
 end
