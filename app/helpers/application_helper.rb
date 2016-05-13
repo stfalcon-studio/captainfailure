@@ -31,18 +31,16 @@ module ApplicationHelper
     end
 
     def send_sms(number, text)
-      require 'turbosms'
+      require_relative '../../lib/turbo_sms'
       setting = Setting.where(name: 'turbosms').first
-      TurboSMS.default_options[:login]    = setting.user
-      TurboSMS.default_options[:password] = setting.password
-      TurboSMS.default_options[:sender]   = setting.name_in_sms
+      turbo_sms = TurboSms.new(login: setting.user, password: setting.password, sender: setting.name_in_sms)
       if text.length > 159
         sms_text = ''
         159.times { |i| sms_text << text[i] }
       else
         sms_text = text
       end
-      TurboSMS.send_sms(number, sms_text)
+      turbo_sms.send_sms(number, sms_text)
     end
 
     def send_slack(channel, text)
@@ -91,14 +89,12 @@ module ApplicationHelper
 
     class << self
       def balance
-        require 'turbosms'
+        require_relative '../../lib/turbo_sms'
         setting = Setting.where(name: 'turbosms').first
-        TurboSMS.default_options[:login]    = setting.user
-        TurboSMS.default_options[:password] = setting.password
-        TurboSMS.default_options[:sender]   = setting.name_in_sms
         begin
-          TurboSMS.balance.to_i
-        rescue TurboSMS::AuthError
+          turbo_sms = TurboSms.new(login: setting.user, password: setting.password, sender: setting.name_in_sms)
+          turbo_sms.balance
+        rescue TurboSms::AuthError
           0
         end
       end
