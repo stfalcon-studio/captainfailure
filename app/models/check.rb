@@ -29,6 +29,7 @@ class Check < ActiveRecord::Base
   has_many :check_results
   has_many :availability_stats
   has_many :schedules, as: :schedulable
+  has_many :http_headers
 
 
   before_save do |check|

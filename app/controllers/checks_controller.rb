@@ -14,7 +14,7 @@
 
 class ChecksController < ApplicationController
 
-  before_action :find_server
+  before_action :find_server, :set_active
   before_action :find_check, only: [:edit, :update, :destroy]
 
   def index
@@ -82,6 +82,10 @@ class ChecksController < ApplicationController
   end
 
   private
+
+  def set_active
+    @active = 'servers'
+  end
 
   def check_params
     params.require(:check).permit(:check_type, :check_via, :tcp_port, :http_code, :http_keyword,

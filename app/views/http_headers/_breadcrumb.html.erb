@@ -1,0 +1,16 @@
+<ol class="breadcrumb">
+  <li><%= link_to @check.server.dns_name, server_path(@check.server.id) %></li>
+  <% via = @check.server.ip_address if @check.check_via == 'ip' %>
+  <% via = @check.server.dns_name if @check.check_via == 'domain' %>
+  <% if @check.check_type == 'http_code' %>
+      <li><%= raw("Check #{@check.http_protocol}://#{@check.http_vhost}#{@check.http_uri} for <strong>#{@check.http_code}</strong> HTTP code on <strong>#{via}</strong>") %></li>
+  <% else %>
+      <li><%= raw("Check #{@check.http_protocol}://#{@check.http_vhost}#{@check.http_uri} for <strong>#{@check.http_code}</strong> HTTP code and keyword <strong>#{@check.http_keyword}</strong> on <strong>#{via}</strong>") %></li>
+  <% end %>
+  <% if action_name == 'new' or action_name == 'edit' %>
+      <li><%= link_to 'HTTP Headers', server_check_http_headers_path(@check.server_id, @check.id) %></li>
+      <li class="active"><%= action_name.capitalize %></li>
+  <% else %>
+      <li class="active">HTTP Headers</li>
+  <% end %>
+</ol>

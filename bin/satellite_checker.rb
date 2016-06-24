@@ -31,13 +31,17 @@ class SatelliteChecker
       return false
     end
 
-    def http_code_check(uri, code_expected, timeout)
+    def http_code_check(uri, code_expected, timeout, headers = nil)
       require 'httpclient'
       client = HTTPClient.new
       begin
         Timeout::timeout(timeout) do
           begin
-            result = client.get(uri)
+            if headers
+              result = client.get(uri, nil, headers)
+            else
+              result = client.get(uri)
+            end
             if result.code == code_expected
               return true
             else
@@ -52,13 +56,17 @@ class SatelliteChecker
       end
     end
 
-    def http_keyword_check(uri, code_expected, keyword, timeout)
+    def http_keyword_check(uri, code_expected, keyword, timeout, headers = nil)
       require 'httpclient'
       client = HTTPClient.new
       begin
         Timeout::timeout(timeout) do
           begin
-            result = client.get(uri)
+            if headers
+              result = client.get(uri, nil, headers)
+            else
+              result = client.get(uri)
+            end
             if (result.code == code_expected) and (result.content.include?(keyword))
               return true
             else
@@ -88,10 +96,18 @@ class SatelliteChecker
           result = SatelliteChecker.port_check(check['ip'], check['tcp_port'], check['timeout'])
         elsif check['check_type'] == 'http_code'
           uri = "#{check['http_protocol']}://#{check['http_vhost']}:#{check['tcp_port']}#{check['http_uri']}"
-          result = SatelliteChecker.http_code_check(uri, check['http_code'], check['timeout'])
+          if check['http_headers']
+            result = SatelliteChecker.http_code_check(uri, check['http_code'], check['timeout'], check['http_headers'])
+          else
+            result = SatelliteChecker.http_code_check(uri, check['http_code'], check['timeout'])
+          end
         elsif check['check_type'] == 'http_keyword'
           uri = "#{check['http_protocol']}://#{check['http_vhost']}:#{check['tcp_port']}#{check['http_uri']}"
-          result = SatelliteChecker.http_keyword_check(uri, check['http_code'], check['http_keyword'], check['timeout'])
+          if check['http_headers']
+            result = SatelliteChecker.http_keyword_check(uri, check['http_code'], check['http_keyword'], check['timeout'], check['http_headers'])
+          else
+            result = SatelliteChecker.http_keyword_check(uri, check['http_code'], check['http_keyword'], check['timeout'])
+          end
         end
         report = {}
         report[:result] = result
@@ -114,7 +130,7 @@ class SatelliteChecker
 end
 
 opts = {host: '127.0.0.1', username: 'captainfailure', password: 'qwerty'}
-satellite_name = 'aws-ierland'
+satellite_name = 'example'
 conn = Bunny.new(opts)
 conn.start
 

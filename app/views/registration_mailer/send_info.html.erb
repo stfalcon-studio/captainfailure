@@ -1,0 +1,20 @@
+<html>
+<body>
+<style>
+  .mail-content {
+    background-color: white;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  body {
+    background-color: lightgray;
+  }
+</style>
+<div class="mail-content">
+  <h2>Congratulations, you got account on <a href="<%= @app_host %>"><%= @app_host %></a></h2>
+  <hr>
+  <p>Email: <a href="mailto:<%= @address %>"><%= @address %></a></p>
+  <p>Password: <%= @password %></p>
+</div>
+</body>
+</html>

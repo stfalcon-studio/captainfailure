@@ -1,0 +1,12 @@
+<div class="container navless-container">
+  <%= render partial: 'breadcrumb' %>
+  <h3>Edit HTTP Header</h3>
+  <div class="col-md-6">
+    <%= simple_form_for [@check, @http_header], url: server_check_http_header_path(@check.server_id, @check.id, @http_header.id ) do |f| %>
+        <%= render partial: 'form', locals: { f: f } %>
+        <div id="form_submit">
+          <%= f.button :submit, value: 'Update' %>
+        </div>
+    <% end %>
+  </div>
+</div>

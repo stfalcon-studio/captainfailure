@@ -64,7 +64,7 @@ namespace :captainfailure do
         satellite.save
       end
     end
-    ApplicationHelper::CaptainFailureFail.all_satellite_down_warning if Satellite.alive_count == 0
+    #ApplicationHelper::CaptainFailureFail.all_satellite_down_warning if Satellite.alive_count == 0
     ch = rabbitmq_connection.create_channel
     rabbit = ch.direct('captainfailure')
     Check.all.each do |check|
@@ -84,6 +84,13 @@ namespace :captainfailure do
             msg['domain'] = server.dns_name
           end
           msg['check_result_id'] = check_result.id
+          if check.http_headers.any?
+            headers = {}
+            check.http_headers.each do |header|
+              headers[header.name] = header.value
+            end
+            msg['http_headers'] = headers
+          end
           rabbit.publish(msg.to_json, :routing_key => satellite.name)
         end
         check.updated_at = Time.now.utc

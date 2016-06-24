@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150911090921) do
+ActiveRecord::Schema.define(version: 20160623122106) do
 
   create_table "availability_stats", force: :cascade do |t|
     t.integer  "check_id"
@@ -51,6 +51,14 @@ ActiveRecord::Schema.define(version: 20150911090921) do
     t.integer  "check_interval", default: 5
     t.integer  "fail_count",     default: 0
     t.integer  "timeout",        default: 30
+  end
+
+  create_table "http_headers", force: :cascade do |t|
+    t.integer  "check_id"
+    t.string   "name",       null: false
+    t.string   "value",      null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "notifications", force: :cascade do |t|
