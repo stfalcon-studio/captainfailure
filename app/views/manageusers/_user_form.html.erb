@@ -3,6 +3,11 @@
   <%= f.text_field :name, class: 'form-control' %>
   <%= f.label :email %>
   <%= f.email_field :email, class: 'form-control' %>
+  <br>
+  <input name="user[generate_password]" type="hidden" value="0">
+  <input type="checkbox" value="1" name="user[generate_password]" id="user_generate_password">
+  <label for="user_generate_password">Generate password and send info to email</label>
+  <br>
   <%= f.label :password %>
   <%= f.password_field :password, :autocomplete => 'off', class: 'form-control' %>
   <%= f.label :password_confirmation %>
@@ -11,3 +16,16 @@
   <%= f.check_box :is_admin %>
   <%= f.label :is_admin, 'Admin (can edit users)' %>
 </div>
+
+<script>
+    $('#user_generate_password').click(function() {
+      if(document.getElementById('user_generate_password').checked) {
+        $('#user_password').prop('disabled', true);
+        $('#user_password_confirmation').prop('disabled', true);
+      }
+      else {
+        $('#user_password').prop('disabled', false);
+        $('#user_password_confirmation').prop('disabled', false);
+      }
+    });
+</script>

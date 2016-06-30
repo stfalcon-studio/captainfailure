@@ -33,7 +33,19 @@ class ManageusersController < ApplicationController
 
   #post /users/manage
   def create
-    @user = User.create(params.require(:user).permit(:name, :email, :password, :password_confirmation, :is_admin))
+    if params[:user][:generate_password] == '1'
+      @user = User.new
+      @user.name     = params[:user][:name]
+      @user.email    = params[:user][:email]
+      @user.is_admin = params[:user][:is_admin]
+      generated_password = SecureRandom.urlsafe_base64(8)
+      @user.password = generated_password
+      @user.password_confirmation = generated_password
+      @user.save
+      RegistrationMailer.send_info(@user.email, request.domain, generated_password).deliver_later
+    else
+      @user = User.create(params.require(:user).permit(:name, :email, :password, :password_confirmation, :is_admin))
+    end
     if @user.errors.empty?
       redirect_to '/users/manage'
     else
@@ -49,12 +61,23 @@ class ManageusersController < ApplicationController
 
   #put /users/manage/:id
   def update
-    if params[:user][:password] == '' and params[:user][:password_confirmation] == ''
-      update_params = :name, :email, :is_admin
+    if params[:user][:generate_password] == '1'
+      @user.name     = params[:user][:name]
+      @user.email    = params[:user][:email]
+      @user.is_admin = params[:user][:is_admin]
+      generated_password = SecureRandom.urlsafe_base64(8)
+      @user.password = generated_password
+      @user.password_confirmation = generated_password
+      @user.save
+      RegistrationMailer.send_info(@user.email, request.protocol + request.host, generated_password).deliver_later
     else
-      update_params = :name, :email, :password, :password_confirmation, :is_admin
+      if params[:user][:password] == '' and params[:user][:password_confirmation] == ''
+        update_params = :name, :email, :is_admin
+      else
+        update_params = :name, :email, :password, :password_confirmation, :is_admin
+      end
+      @user.update_attributes(params.require(:user).permit(update_params))
     end
-    @user.update_attributes(params.require(:user).permit(update_params))
     if @user.errors.empty?
       redirect_to '/users/manage'
     else

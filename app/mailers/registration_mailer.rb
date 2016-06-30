@@ -6,7 +6,7 @@ class RegistrationMailer < ApplicationMailer
     @app_host = app_host
     @password = password
     mail( :to => address,
-          :subject => "You got account on #{app_host}" ) do |format|
+          :subject => "You got account on #{app_host.split('//')[1]}" ) do |format|
       format.html
     end
   end
