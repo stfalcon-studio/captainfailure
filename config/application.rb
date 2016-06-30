@@ -23,5 +23,6 @@ module Captainfailure
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
     config.email_from = 'noreply@example.com'
+    config.domain_in_mail = 'http://example.com/'
   end
 end

@@ -69,7 +69,7 @@ class ManageusersController < ApplicationController
       @user.password = generated_password
       @user.password_confirmation = generated_password
       @user.save
-      RegistrationMailer.send_info(@user.email, request.protocol + request.host, generated_password).deliver_later
+      RegistrationMailer.send_info(@user.email, Rails.configuration.domain_in_mail, generated_password).deliver_later
     else
       if params[:user][:password] == '' and params[:user][:password_confirmation] == ''
         update_params = :name, :email, :is_admin
