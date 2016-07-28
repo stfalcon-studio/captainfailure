@@ -14,6 +14,7 @@
           <%= raw("Send <strong>#{n.icmp_count}</strong> ICMP packet to <strong>#{via}</strong>") if n.check_type == 'icmp' %>
           <%= raw("Check if <strong>#{n.tcp_port}</strong> port open on <strong>#{via}</strong>") if n.check_type == 'port_open' %>
           <%= raw("Check <a target=\"_blank\" href=\"#{n.http_protocol}://#{n.http_vhost}#{n.http_uri}\">#{n.http_protocol}://#{n.http_vhost}#{n.http_uri}</a> for <strong>#{n.http_code}</strong> HTTP code on <strong>#{via}</strong>") if n.check_type == 'http_code' %>
+          <%= raw("Check certificate on <a target=\"_blank\" href=\"#{n.http_protocol}://#{n.http_vhost}#{n.http_uri}\">#{n.http_protocol}://#{n.http_vhost}#{n.http_uri}</a> if it is valid more than <strong>#{n.days_left}</strong> days on <strong>#{via}</strong>") if n.check_type == 'cert_check' %>
           <%= raw("Check <a target=\"_blank\" href=\"#{n.http_protocol}://#{n.http_vhost}#{n.http_uri}\">#{n.http_protocol}://#{n.http_vhost}#{n.http_uri}</a> for <strong>#{n.http_code}</strong> HTTP code and keyword <strong>#{n.http_keyword}</strong> on <strong>#{via}</strong>") if n.check_type == 'http_keyword' %>
         </td>
         <td>

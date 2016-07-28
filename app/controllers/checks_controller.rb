@@ -90,7 +90,7 @@ class ChecksController < ApplicationController
   def check_params
     params.require(:check).permit(:check_type, :check_via, :tcp_port, :http_code, :http_keyword,
                                   :http_vhost, :icmp_count, :http_uri, :http_protocol, :enabled,
-                                  :check_interval, :timeout)
+                                  :check_interval, :days_left, :timeout)
   end
 
   def find_server

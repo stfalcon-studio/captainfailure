@@ -15,7 +15,7 @@
 class Check < ActiveRecord::Base
   include CheckScheduleState
 
-  enum check_type:    { icmp: 0, port_open: 1, http_code: 2, http_keyword: 3 }
+  enum check_type:    { icmp: 0, port_open: 1, http_code: 2, http_keyword: 3, cert_check: 4 }
   enum check_via:     { ip: 0, domain: 1 }
   enum http_protocol: { http: 0, https: 1 }
   enum enabled:       { yes: true, no: false }
@@ -24,6 +24,7 @@ class Check < ActiveRecord::Base
   validates_numericality_of :tcp_port, greater_than: 0, less_than: 65535, allow_nil: true
   validates_numericality_of :timeout, greater_than: 4, less_than: 61
   validates_numericality_of :http_code, allow_nil: true
+  validates_numericality_of :days_left, greater_than: 0, allow_nil: true
 
   belongs_to :server
   has_many :check_results
@@ -45,6 +46,13 @@ class Check < ActiveRecord::Base
     end
     if check.check_type == 'http_keyword'
       raise_save_error(check, 'HTTP keyword required.') if check.http_keyword == ''
+    end
+
+    if check.check_type == 'cert_check'
+      raise_save_error(check, 'HTTP vhost required.') if check.http_vhost == ''
+      raise_save_error(check, 'HTTP uri required.') if check.http_uri == ''
+      raise_save_error(check, 'For this type https protocol required') unless check.http_protocol == 'https'
+      raise_save_error(check, 'Set days to expire') if check.days_left == nil
     end
 
   end

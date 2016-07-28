@@ -56,6 +56,28 @@ class SatelliteChecker
       end
     end
 
+    def cert_check(uri, days)
+      require 'httpclient'
+      client = HTTPClient.new
+      begin
+        Timeout::timeout(30) do
+          begin
+            result = client.get(uri)
+            days_left = ((result.peer_cert.not_after - Time.now.utc) / 86400).to_i
+            if days_left > days
+              return true
+            else
+              return false
+            end
+          rescue
+            return false
+          end
+        end
+      rescue Timeout::Error
+        return false
+      end
+    end
+
     def http_keyword_check(uri, code_expected, keyword, timeout, headers = nil)
       require 'httpclient'
       client = HTTPClient.new
@@ -108,6 +130,9 @@ class SatelliteChecker
           else
             result = SatelliteChecker.http_keyword_check(uri, check['http_code'], check['http_keyword'], check['timeout'])
           end
+        elsif check['check_type'] == 'cert_check'
+          uri = "#{check['http_protocol']}://#{check['http_vhost']}:#{check['tcp_port']}#{check['http_uri']}"
+          result = SatelliteChecker.cert_check(uri, check['days_left'])
         end
         report = {}
         report[:result] = result

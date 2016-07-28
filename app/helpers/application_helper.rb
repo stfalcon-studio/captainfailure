@@ -12,6 +12,7 @@ module ApplicationHelper
       text = "Failed ICMP check to #{@server.dns_name}" if @check_result.check.check_type == 'icmp'
       text = "Port #{@check_result.check.tcp_port} closed on #{@server.dns_name}" if @check_result.check.check_type == 'port_open'
       text = "Failed #{@check_result.check.http_protocol}://#{@check_result.check.http_vhost}#{@check_result.check.http_uri} for #{@check_result.check.http_code} HTTP code on #{@server.dns_name}" if @check_result.check.check_type == 'http_code'
+      text = "Certificate on  #{@check_result.check.http_protocol}://#{@check_result.check.http_vhost}#{@check_result.check.http_uri} will expire less than #{@check_result.check.days_left} days on #{@server.dns_name}" if @check_result.check.check_type == 'cert_check'
       text = "Failed #{@check_result.check.http_protocol}://#{@check_result.check.http_vhost}#{@check_result.check.http_uri} for #{@check_result.check.http_code} HTTP code and keyword #{@check_result.check.http_keyword} on #{@server.dns_name}" if @check_result.check.check_type == 'http_keyword'
       @server.notifications.each do |notification|
         notification_fail_count = notification_fail_count(@server.id, notification.id)

@@ -12,6 +12,7 @@ $(function() {
         $('#http_protocol').hide();
         $('#http_keyword').hide();
         $('#check_interval').hide();
+        $('#days_left').hide();
         $('#timeout').hide();
         $('#form_submit').hide();
     }
@@ -57,6 +58,18 @@ $(function() {
         $('#check_interval').show();
         $('#http_keyword').show();
         $('#timeout').show();
+        $('#form_submit').show();
+    }
+    if($('#check_check_type').val() == 'cert_check') {
+        hide_all()
+        $('#check_via').show();
+        $('#enabled').show();
+        $('#tcp_port').show();
+        $('#http_vhost').show();
+        $('#http_uri').show();
+        $('#http_protocol').show();
+        $('#days_left').show();
+        $('#check_interval').show();
         $('#form_submit').show();
     }
     if($('#check_check_type').val() == '') {
@@ -105,6 +118,18 @@ $(function() {
             $('#check_interval').show();
             $('#http_keyword').show();
             $('#timeout').show();
+            $('#form_submit').show();
+        }
+        if($('#check_check_type').val() == 'cert_check') {
+            hide_all()
+            $('#check_via').show();
+            $('#enabled').show();
+            $('#tcp_port').show();
+            $('#http_vhost').show();
+            $('#http_uri').show();
+            $('#http_protocol').show();
+            $('#days_left').show();
+            $('#check_interval').show();
             $('#form_submit').show();
         }
         if($('#check_check_type').val() == '') {
