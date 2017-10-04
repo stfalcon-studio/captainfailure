@@ -14,9 +14,19 @@
       <div class="panel-heading">
         <h3 class="panel-title">TurboSMS balance</h3>
       </div>
-      <div class="panel-body">
-        <%= @balance %>
+      <div class="panel-body" id="turbosms-balance">
+        <div class="loader"></div>
       </div>
     </div>
   </div>
 </div>
+
+<script>
+    $.ajax({url: "/settings/turbosms_balance", success: function(result){
+        $('#turbosms-balance').html(result);
+    },
+        error: function (xhr, ajaxOptions, thrownError) {
+            $('#turbosms-balance').html('<p style="color: red;">Error getting data from turbosms.ua</p>');
+        }
+    });
+</script>
