@@ -187,11 +187,14 @@
 
     function get_la_data(server_id, check_id) {
         $.getJSON('/servers/' + server_id + '/checks/' + check_id + '/availability', function(data) {
-            drawBasic(data);
+            aviability_data = [];
+            data.forEach(i => aviability_data.push(i[1]));
+            min_value = Math.min.apply(Math, aviability_data)
+            drawBasic(data, min_value);
         });
     }
 
-    function drawBasic(availability_data) {
+    function drawBasic(availability_data, min_value) {
 
         var data = new google.visualization.DataTable();
 
@@ -206,7 +209,7 @@
             },
             vAxis: {
                 title: '%',
-                'minValue': 0,
+                'minValue': min_value,
                 'maxValue': 100
             },
             'width':500,
